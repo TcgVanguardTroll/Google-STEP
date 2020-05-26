@@ -28,11 +28,10 @@ function addRandomGreeting() {
 }
 
 function addRandomFact(){
-    const facts =
-    [
+    const facts = [
     'I am currently learning russian,Привет ', 
     'I am interested in compilers and progamming languages',
-    'I have lived in three states: California, New York, and Virginia !'
+    'I have lived in three states: California, New York, and Virginia !',
     ];
 
     // Get a random fact.
