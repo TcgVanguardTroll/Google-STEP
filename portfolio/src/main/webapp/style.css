@@ -7,3 +7,34 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+#fact-container {
+  margin-top: 20px;
+}
+
+:root {
+    font-size: 16px;
+    --text-primary:#b6b6b6;
+    --text-secondary:#b6b6b6;
+    --bg-primary: #23232e;
+    --bg-secondary: #141418;
+}
+
+body {
+    margin:0;
+    padding: 0;
+}
+
+body ::-webkit-scrollbar{
+    width: 0.25rem;
+}
+
+main {
+    margin-left: 5rem
+}
+
+.navbar{
+    width: 5rem;
+    height: 100vh;
+    position: fixed;
+}
