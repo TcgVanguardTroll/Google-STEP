@@ -1,20 +1,4 @@
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
-
-const russianWords = 
-`и
 в
 не
 на
@@ -1801,7 +1785,7 @@ x
 вставать
 выступление
 извинить
-\\0
+\0
 внимательно
 юрий
 малыш
@@ -2866,7 +2850,7 @@ v
 потенциал
 одиночество
 фантазия
-\\
+\
 якобы
 производственный
 мина
@@ -5101,7 +5085,7 @@ y
 экономист
 решетка
 парламентский
-\\0\\0
+\0\0
 деревенский
 специфика
 функционирование
@@ -5539,7 +5523,7 @@ web
 петербургский
 устранить
 нежность
-\\0\\0\\0
+\0\0\0
 сынок
 грамота
 швеция
@@ -6224,7 +6208,7 @@ apr
 вал
 взлететь
 предпосылка
-\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\
+\0\0\0\0\0\0\0\0\0\0\0\
 отделять
 холл
 босс
@@ -9624,7 +9608,7 @@ nokia
 небывалый
 печенье
 помахать
-\\0\\
+\0\
 шнур
 аристотель
 поднести
@@ -9974,6 +9958,7 @@ this
 язва
 днепр
 стражник
+\\
 волевой
 типовой
 буйный
@@ -10008,42 +9993,4 @@ sep
 мерзавец
 юго
 дистанционный
-окрасить` .split(/\r?\n/);
-
-function getRandomRussianWord() {
-    const idxRange = Math.floor (Math.random() * russianWords.length);
-    return russianWords[idxRange];
-}
-
-function addRandomFact(){
-    const facts = [
-        `I am currently learning russian, ${getRandomRussianWord()}`, 
-        'I am interested in compilers and progamming languages.',
-        'I have interned at Google twice !',
-        'I have lived in three states: California, New York, and Virginia.!',
-        'I enjoy writing and watching fantasy.',
-        'I am a member of NSBE.'
-    ];
-
-    const factsTemp = [...facts];
-
-    // Store index in variable for future use.
-    const idx = Math.floor(Math.random() * facts.length);
-
-    // Get a random fact.
-    // TODO(): Prevent the user from seeing the same fact multiple times after pressing the button.
-    const fact = facts[idx];
-
-    // Add it to the page.
-    const factContainer = document.getElementById('fact-container');
-    factContainer.innerText = fact;
-
-    if(facts.length === 0){
-        factContainer.innerText = "Thats all the facts about me !";
-    }
-
-    console.log(russianWords);
-}
-
-Window.addRandomFact = addRandomFact;
-
+окрасить
