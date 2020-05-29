@@ -10023,6 +10023,7 @@ function addRandomFact(){
         'I have lived in three states: California, New York, and Virginia.!',
         'I enjoy writing and watching fantasy.',
         'I am a member of NSBE.'
+        `My favorite show is Law and Order: Special Victims Unit !`
     ];
 
     const factsTemp = [...facts];
