@@ -33,14 +33,27 @@ function addRandomFact(){
         'I am interested in compilers and progamming languages.',
         'I have interned at Google twice !',
         'I have lived in three states: California, New York, and Virginia.!',
+        'I enjoy writing and watching fantasy.',
+        'I am a memebr of NSBE.'
     ];
+
+    const factsTemp = [...facts];
+
+    // Store index in variable for future use.
+    const idx = Math.floor(Math.random() * facts.length)
 
     // Get a random fact.
     // TODO(): Prevent the user from seeing the same fact multiple times after pressing the button.
-    const fact = facts[Math.floor(Math.random() * facts.length)];
+    const fact = facts[idx];
 
     // Add it to the page.
     const factContainer = document.getElementById('fact-container');
     factContainer.innerText = fact;
+
+    if(facts.length === 0){
+        factContainer.innerText = "Thats all the facts about me !";
+    }
+
+    facts.splice(idx,1);
 }
 
