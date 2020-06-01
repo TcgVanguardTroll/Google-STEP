@@ -24,9 +24,17 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+    private String name;
+
+    @Override public void init() {
+        name = "Jordan";
+    }
+
+
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello Jordan This is Your Personal Assistant !</h1>");
-  }
+    response.getWriter().println(String.format("<h1>Hello %s This is Your Personal Assistant !</h1>",name));
+   }
 }

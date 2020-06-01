@@ -81,3 +81,9 @@ function addRandomFact(){
         factContainer.innerText = fact;
     }
 }
+
+function introduce(){
+      fetch('/data').then(response => response.text()).then((fact) => {
+    document.getElementById('fact-container').innerText = fact;
+  });
+}
