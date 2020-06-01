@@ -12,48 +12,72 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+const russianWords = 
+`и
+в
+не
+на
+я
+что
+быть
+с
+он
+а
+это
+как
+то
+этот
+по
+к
+но
+они
+мы
+она
+который
+из
+у
+же
+год
+человек
+нехитрый
+мерзавец
+юго
+дистанционный
+окрасить` .split(/\r?\n/);
+// Function that returns russian word from russianWords.
+function getRandomRussianWord() {
+    const idxRange = Math.floor (Math.random() * russianWords.length);
+    return russianWords[idxRange];
 }
-
+// Array containing information about Jordan Grant.
+let facts = [
+    `I am currently learning russian, ${getRandomRussianWord()}`, 
+    'I am interested in compilers and progamming languages.',
+    'I have interned at Google twice !',
+    'I have lived in three states: California, New York, and Virginia.!',
+    'I enjoy writing and watching fantasy.',
+    'I am a member of NSBE.',
+    'I like Playing JRPGS like Disgaea and Persona ', 
+    `My favorite show is Law and Order: Special Victims Unit !`
+];
+// function that returns a random Fact about Jordan Grant.
 function addRandomFact(){
-    const facts = [
-        'I am currently learning russian, Привет ', 
-        'I am interested in compilers and progamming languages.',
-        'I have interned at Google twice !',
-        'I have lived in three states: California, New York, and Virginia.!',
-        'I enjoy writing and watching fantasy.',
-        'I am a memebr of NSBE.'
-    ];
-
-    const factsTemp = [...facts];
 
     // Store index in variable for future use.
-    const idx = Math.floor(Math.random() * facts.length)
+    const idx = Math.floor(Math.random() * facts.length);
 
     // Get a random fact.
-    // TODO(): Prevent the user from seeing the same fact multiple times after pressing the button.
     const fact = facts[idx];
-
-    // Add it to the page.
+    // Gets Fact container element.
     const factContainer = document.getElementById('fact-container');
-    factContainer.innerText = fact;
-
-    if(facts.length === 0){
+    // Trcaks the item in array if 0 end.
+    if(facts.length == 0){
         factContainer.innerText = "Thats all the facts about me !";
-    }
-
+    } else {
+    // Pop element via index. 
     facts.splice(idx,1);
+    // Add it to the page.
+    factContainer.innerText = fact;
+    }
 }
-
