@@ -85,5 +85,28 @@ function addRandomFact(){
 function introduce(){
       fetch('/data').then(response => response.text()).then((fact) => {
     document.getElementById('fact-container').innerText = fact;
-  });
+  })};
+
+function fetchData(){
+      fetch('/data').then(response => response.json()).then((data) => {
+    // stats is an object, not a string, so we have to
+    // reference its fields to create HTML content
+
+    const statsListElement = document.getElementById('fact-container');
+    statsListElement.innerHTML = '';
+    statsListElement.appendChild(
+        createListElement('Comment 1: ' + data[0]));
+    statsListElement.appendChild(
+        createListElement('Comment 2: ' + data[1]));
+    statsListElement.appendChild(
+        createListElement('Comment 3: ' + data[2]));
+});
 }
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
+
