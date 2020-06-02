@@ -8,7 +8,7 @@
 
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"></script>
   </head>
-  <body>
+  <body onload="fetchData()">
     <div id ="webHeader">
     <h1 >Jordan's Portfolio</h1>
     </div>
@@ -44,7 +44,7 @@
     </div>
 
       <p>Click here to get a brief overview of who I am :</p>
-      <button onclick="addRandomFact(); introduce(); fetchData()">One fact about me is </button>
+        <button onclick="addRandomFact()">One fact about me is </button>
       <div id="fact-container"></div>
     </div>
   </body>
