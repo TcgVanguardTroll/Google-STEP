@@ -29,41 +29,41 @@ public class DataServlet extends HttpServlet {
 
     private List<String> comments = new ArrayList<String>();
 
-    @Override public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Gson gson = new Gson();
-    String json = gson.toJson(comments);
-    response.getWriter().println((json));    
+    @Override 
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(comments);
+        response.getWriter().println((json));    
     }
 
-      @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
-    String comment = getComment(request);
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Get the input from the form.
+        String comment = getComment(request);
 
-    // Add comment to comments Array.
-    comments.add(comment);
+        // Add comment to comments Array.
+        comments.add(comment);
 
-    response.setContentType("text/html;");
-    response.getWriter().println(comments);
+        response.setContentType("text/html;");
+        response.getWriter().println(comments);
 
-    // Redirect back to the HTML page.
-    response.sendRedirect("/index.html");  
-    }
+        // Redirect back to the HTML page.
+        response.sendRedirect("/index.html");  
+        }
 
   /**
    * @return the request parameter, or the default value if the parameter
    *         was not specified by the client
    */
   private String getComment(HttpServletRequest request) {
-    //   Get comment from form.
+        //   Get comment from form.
+        String comment;
+        try{
+            String comment = request.getParameter("comment");
 
-    String comment;
-    try{
-        String comment = request.getParameter("comment");
-
-    }catch(NullPointerException e) { 
-        System.out.print("NullPointerException Caught");
-            return -1; 
+        }catch(NullPointerException e) { 
+            System.out.print("NullPointerException Caught");
+                return -1; 
         } 
 
     return comment;
