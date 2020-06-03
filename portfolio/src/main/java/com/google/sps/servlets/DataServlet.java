@@ -33,6 +33,7 @@ public class DataServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(comments);
+        response.setContentType("application/json;");
         response.getWriter().println((json));    
     }
 
@@ -44,8 +45,10 @@ public class DataServlet extends HttpServlet {
         // Add comment to comments Array.
         comments.add(comment);
 
-        response.setContentType("text/html;");
-        response.getWriter().println(comments);
+        // Sends JSON to the client.
+        String json = gson.toJson(comments);
+        response.setContentType("application/json;");
+        response.getWriter().println(json);
 
         // Redirect back to the HTML page.
         response.sendRedirect("/index.html");  
@@ -61,7 +64,7 @@ public class DataServlet extends HttpServlet {
     if(comment == null){
         return null;
     }
-    return comment;
+    return request.getParameter("comment");
   }
 }
 
