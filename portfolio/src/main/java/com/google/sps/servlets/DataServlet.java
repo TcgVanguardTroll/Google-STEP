@@ -56,14 +56,13 @@ public class DataServlet extends HttpServlet {
    *         was not specified by the client
    */
   private String getComment(HttpServletRequest request) {
-        //   Get comment from form.
-        String comment;
-        try{
-            String comment = request.getParameter("comment");
-
+    //   Get comment from form.
+    String comment;
+    try{
+        String comment = request.getParameter("comment");
         }catch(NullPointerException e) { 
             System.out.print("NullPointerException Caught");
-                return -1; 
+            return -1; 
         } 
 
     return comment;
