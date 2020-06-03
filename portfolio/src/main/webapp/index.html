@@ -8,7 +8,7 @@
 
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"></script>
   </head>
-  <body>
+  <body onload="getMessages()">
     <div id ="webHeader">
     <h1 >Jordan's Portfolio</h1>
     </div>
@@ -36,6 +36,7 @@
             It cemented my interests in computer science and the memeories I made over that summer were
             unforgettable.
         </p>
+        <p>
            Althoguh I'm only a Rising Junior nor as well as the fcat that I'm nowhere near the smartest person
            I know, I want this page to represent my progress as I grow. Becuase I want to share with the world
           all the places that I will go.
@@ -43,14 +44,19 @@
     </div>
 
       <p>Click here to get a brief overview of who I am :</p>
-      <button onclick="addRandomFact()">One fact about me is </button>
+        <button onclick="addRandomFact()">One fact about me is </button>
       <div id="fact-container"></div>
     </div>
-
-    <div class = "social">
-      <a href="https://github.com/TcgVanguardTroll">
-      <img src="img/Github.png">
-      </a>
+    <div class="comments">
+        <form action = "/data" method="POST">
+            <p>Leave a comment :) </p>
+            <textarea name="comment" placeholder="Write Comment Here"></textarea>
+            <br><br>
+            <input type="submit"/>
+            <br><br>
+        </form>
     </div>
+        <table id = "comment-container"></table>
+
   </body>
 </html>

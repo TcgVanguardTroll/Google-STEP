@@ -75,9 +75,37 @@ function addRandomFact(){
     if(facts.length == 0){
         factContainer.innerText = "Thats all the facts about me !";
     } else {
-    // Pop element via index. 
-    facts.splice(idx,1);
-    // Add it to the page.
-    factContainer.innerText = fact;
+        // Pop element via index. 
+        facts.splice(idx,1);
+        // Add it to the page.
+        factContainer.innerText = fact;
     }
+}
+
+function getMessages(){
+    fetch('/data').then(response => response.json()).then((comment) => {
+    const dataListElement = document.getElementById('comment-container');
+    dataListElement.innerHTML = '';
+    comments.forEach((comment) => {
+      dataListElement.appendChild(createElementForComment(comment));
+    })
+  });
+}
+
+/** 
+ * Creates an table row element,<tr><td> </td></tr>, containing text. 
+ */
+function createElementForComment(commentObj) {
+  const trElement = document.createElement('tr');
+  const thElement = document.createElement('th');
+  const tdElement = document.createElement('td');
+  
+  thElement.innerText = commentObj.name;
+  tdElement.innerText = '"' + commentObj.comment + '"';
+
+  thText = thElement.outerHTML;
+  tdText = tdElement.outerHTML;
+
+  trElement.innerHTML = thText + tdText;
+  return trElement;
 }
