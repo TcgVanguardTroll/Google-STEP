@@ -43,8 +43,9 @@ public class DataServlet extends HttpServlet {
         String comment = getComment(request);
 
         // Add comment to comments Array.
-        comments.add(comment);
-
+        if(comment != null){
+            comments.add(comment);
+        }
         // Sends JSON to the client.
         String json = gson.toJson(comments);
         response.setContentType("application/json;");
@@ -61,9 +62,6 @@ public class DataServlet extends HttpServlet {
   private String getComment(HttpServletRequest request) {
     //   Get comment from form.
     String comment = request.getParameter("comment");
-    if(comment == null){
-        return null;
-    }
     return request.getParameter("comment");
   }
 }
