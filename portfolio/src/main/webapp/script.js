@@ -87,7 +87,7 @@ function getMessages(){
     const dataListElement = document.getElementById('comment-container');
     dataListElement.innerHTML = '';
     comments.forEach((comment) => {
-      dataListElement.appendChild(createTableRowElement(comment));
+      dataListElement.appendChild(createElementForComment(comment));
     })
   });
 }
@@ -95,7 +95,7 @@ function getMessages(){
 /** 
  * Creates an table row element,<tr><td> </td></tr>, containing text. 
  */
-function createTableRowElement(commentObj) {
+function createElementForComment(commentObj) {
   const trElement = document.createElement('tr');
   const thElement = document.createElement('th');
   const tdElement = document.createElement('td');

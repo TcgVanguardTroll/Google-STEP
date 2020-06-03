@@ -43,7 +43,7 @@ public class DataServlet extends HttpServlet {
         String comment = getComment(request);
 
         // Add comment to comments Array.
-        if(comment != null){
+        if (comment != null) {
             comments.add(comment);
         }
         // Sends JSON to the client.
