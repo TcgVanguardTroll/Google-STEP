@@ -92,20 +92,3 @@ function getMessages(){
   });
 }
 
-/** 
- * Creates an table row element,<tr><td> </td></tr>, containing text. 
- */
-function createTableRowElement(commentObj) {
-  const trElement = document.createElement('tr');
-  const thElement = document.createElement('th');
-  const tdElement = document.createElement('td');
-  
-  thElement.innerText = commentObj.name;
-  tdElement.innerText = '"' + commentObj.comment + '"';
-
-  thText = thElement.outerHTML;
-  tdText = tdElement.outerHTML;
-
-  trElement.innerHTML = thText + tdText;
-  return trElement;
-}

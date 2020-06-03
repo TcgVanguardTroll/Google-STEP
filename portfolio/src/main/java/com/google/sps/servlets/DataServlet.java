@@ -26,8 +26,6 @@ import com.google.gson.Gson;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-    private String name = "Jordan";
-
     private List<String> comments = new ArrayList<String>();
 
     @Override public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -59,7 +57,7 @@ public class DataServlet extends HttpServlet {
     //   Get comment from form.
     String comment = request.getParameter("comment");
     if (comment == null) {
-      return "Welp";
+      return " ";
     }
     return comment;
   }
