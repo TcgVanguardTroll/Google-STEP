@@ -16,7 +16,7 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
-import java.util.ArrayList;
+import java.util.*;  
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,26 +26,43 @@ import com.google.gson.Gson;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-    private String name;
+    private String name = "Jordan";
 
-    private ArrayList<String> info = new ArrayList<String>() {{
-        add("My name is Jordan");
-        add("I hope to speak russian fluently one day");
-        add("I want to have a nice life.");
-    }};
-    @Override public void init() {
-        name = "Jordan";
-    }
-
+    private List<String> comments = new ArrayList<String>();
 
     @Override public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Gson gson = new Gson();
-    String json = gson.toJson(info);
-    // response.setContentType("text/html;");
-    // response.getWriter().println(String.format("<h1>Hello %s This is Your Personal Assistant !</h1>",name));
-    response.setContentType("application/json;");
-    response.getWriter().println((info));    
+    String json = gson.toJson(comments);
+    response.getWriter().println((json));    
     }
+
+      @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String comment = getComment(request);
+
+    // Add comment to comments Array.
+    comments.add(comment);
+
+    response.setContentType("text/html;");
+    response.getWriter().println(comments);
+
+    // Redirect back to the HTML page.
+    response.sendRedirect("/index.html");  
+    }
+
+  /**
+   * @return the request parameter, or the default value if the parameter
+   *         was not specified by the client
+   */
+  private String getComment(HttpServletRequest request) {
+    //   Get comment from form.
+    String comment = request.getParameter("comment");
+    if (comment == null) {
+      return "Welp";
+    }
+    return comment;
+  }
 }
 
 

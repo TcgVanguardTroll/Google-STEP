@@ -47,5 +47,15 @@
         <button onclick="addRandomFact()">One fact about me is </button>
       <div id="fact-container"></div>
     </div>
+    <div class="comments">
+        <form action = "/data" method="POST">
+            <p>Leave a comment :) </p>
+            <textarea name="comment" placeholder="Write Comment Here"></textarea>
+            <br><br>
+            <input type="submit"/>
+            <br><br>
+        </form>
+        <table id = "comment-container"></table>
+
   </body>
 </html>

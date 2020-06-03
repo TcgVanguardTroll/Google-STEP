@@ -82,22 +82,30 @@ function addRandomFact(){
     }
 }
 
-function introduce(){
-    fetch('/data').then(response => response.text()).then((fact) => {
-    document.getElementById('fact-container').innerText = fact;
-  })};
-
-function fetchData(){
-    fetch('/data')
-    .then(response => response.json())
-    .then((data) => { console.log(data);
-    });
+function getMessages(){
+    fetch('/data').then(response => response.json()).then((comment) => {
+    const dataListElement = document.getElementById('comment-container');
+    dataListElement.innerHTML = '';
+    comments.forEach((comment) => {
+      dataListElement.appendChild(createTableRowElement(comment));
+    })
+  });
 }
 
-/** Creates an <li> element containing text. */
-function createListElement(text) {
-    const liElement = document.createElement('li');
-    liElement.innerText = text;
-    return liElement;
-}
+/** 
+ * Creates an table row element,<tr><td> </td></tr>, containing text. 
+ */
+function createTableRowElement(commentObj) {
+  const trElement = document.createElement('tr');
+  const thElement = document.createElement('th');
+  const tdElement = document.createElement('td');
+  
+  thElement.innerText = commentObj.name;
+  tdElement.innerText = '"' + commentObj.comment + '"';
 
+  thText = thElement.outerHTML;
+  tdText = tdElement.outerHTML;
+
+  trElement.innerHTML = thText + tdText;
+  return trElement;
+}
