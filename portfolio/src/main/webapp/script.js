@@ -83,7 +83,7 @@ function addRandomFact(){
 }
 
 function getMessages(){
-    fetch('/data').then(response => response.json()).then((comment) => {
+    fetch('/data').then(response => response.json()).then((comments) => {
     const dataListElement = document.getElementById('comment-container');
     dataListElement.innerHTML = '';
     comments.forEach((comment) => {
