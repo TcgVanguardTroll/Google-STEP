@@ -14,27 +14,45 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.gson.Gson;
+import com.google.sps.data.Comment;
 import java.io.IOException;
-import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.gson.Gson;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-    private List<String> comments = new ArrayList<String>();
+    // Data Structure for storing Comments.
+    private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     @Override 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Creating a Comment Query .
+        Query query = new Query("Comment");
+        // Creating a PreparedQuery storing results. 
+        PreparedQuery results = datastore.prepare(query);
+        // Storing comment querys within Array. 
+        List<Comment> comments = new ArrayList<>();
+        for (Entity entity : results.asIterable()) {
+            String name = (String) entity.getProperty("name");
+            String pageComment = (String) entity.getProperty("comment");
+            Comment comment = new Comment(name, pageComment);
+            comments.add(comment);
+        }
         Gson gson = new Gson();
-        String json = gson.toJson(comments);
         response.setContentType("application/json;");
-        response.getWriter().println((json));    
+        response.getWriter().println(gson.toJson(comments));    
     }
 
     @Override
@@ -42,26 +60,36 @@ public class DataServlet extends HttpServlet {
         // Get the input from the form.
         String comment = getComment(request);
 
-        // Add comment to comments Array.
-        if (comment != null) {
-            comments.add(comment);
+        // Get the name from the form.
+        String name = getName(request);
+        
+        // Create an entity representing the users comment. 
+        Entity commentEntity = new Entity("Comment");
+        
+        // Ensuring whether or not the user's comment and name werent null.
+        if (comment != null && name != null) {
+            commentEntity.setProperty("name", name);
+            commentEntity.setProperty("comment", comment);
+            // Putting the comment entity within the datastore.  
+            datastore.put(commentEntity);
         }
-        // Sends JSON to the client.
-        String json = gson.toJson(comments);
-        response.setContentType("application/json;");
-        response.getWriter().println(json);
 
         // Redirect back to the HTML page.
         response.sendRedirect("/index.html");  
         }
 
-  /**
-   * @return the request parameter, or the default value if the parameter
-   *         was not specified by the client
-   */
-  private String getComment(HttpServletRequest request) {
-    //   Get comment from form.
-    return request.getParameter("comment");
+    /**
+    * @return the request parameter, or the default value if the parameter
+    *         was not specified by the client
+    */
+    private String getComment(HttpServletRequest request) {
+        //   Get comment from form.
+        return request.getParameter("comment");
+  }
+
+    private String getName(HttpServletRequest request) {
+        //   Get name from form.
+        return request.getParameter("name");
   }
 }
 
