@@ -33,26 +33,23 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-    // Data Structure  
+    // Data Structure for storing Comments.
     private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     @Override 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+        // Creating a Comment Query .
         Query query = new Query("Comment");
-
+        // Creating a PreparedQuery storing results. 
         PreparedQuery results = datastore.prepare(query);
-
+        // Storing comment querys within Array. 
         List<Comment> comments = new ArrayList<>();
-
-
         for (Entity entity : results.asIterable()) {
             String name = (String) entity.getProperty("name");
-            String pageComment = (String )entity.getProperty("comment");
+            String pageComment = (String) entity.getProperty("comment");
             Comment comment = new Comment(name, pageComment);
             comments.add(comment);
         }
-
         Gson gson = new Gson();
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(comments));    
@@ -73,10 +70,9 @@ public class DataServlet extends HttpServlet {
         if (comment != null && name != null) {
             commentEntity.setProperty("name", name);
             commentEntity.setProperty("comment", comment);
+            // Putting the comment entity within the datastore.  
+            datastore.put(commentEntity);
         }
-
-        // Putting the comment entity within the datastore.  
-        datastore.put(commentEntity);
 
         // Redirect back to the HTML page.
         response.sendRedirect("/index.html");  
