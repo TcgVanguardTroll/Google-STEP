@@ -84,12 +84,12 @@ function addRandomFact(){
 
 function getMessages(){
     fetch('/data').then(response => response.json()).then((comments) => {
-    const dataListElement = document.getElementById('comment-container');
-    dataListElement.innerHTML = '';
-    comments.forEach((comment) => {
-      dataListElement.appendChild(createElementForComment(comment));
-    })
-  });
+        const dataListElement = document.getElementById('comment-container');
+        dataListElement.innerHTML = '';
+        comments.forEach((comment) => {
+            dataListElement.appendChild(createElementForComment(comment));
+        })
+    });
 }
 
 /** 
