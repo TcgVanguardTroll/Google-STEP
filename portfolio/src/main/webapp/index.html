@@ -5,8 +5,6 @@
     <title>Jordan's Site</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"></script>
   </head>
   <body onload="getMessages()">
     <div id ="webHeader">
@@ -48,6 +46,7 @@
       <div id="fact-container"></div>
     </div>
     <div class="comments">
+        <table id = "comment-container"> </table>
         <form action = "/data" method="POST">
             <p>Leave a comment :) </p>
             <textarea name="name" placeholder="Write Your Name Here"></textarea>
@@ -57,8 +56,6 @@
             <br><br>
         </form>
     </div>
-        <table id = "comment-container">
-        </table>
-
+    <table id = "comment-container"> </table>
   </body>
 </html>
