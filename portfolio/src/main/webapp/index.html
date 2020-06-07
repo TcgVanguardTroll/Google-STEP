@@ -7,55 +7,40 @@
     <script src="script.js"></script>
   </head>
   <body onload="getMessages()">
-    <div id ="webHeader">
-    <h1 >Jordan's Portfolio</h1>
-    </div>
-
-    <div id = "logo">
-        <a href="https://www.youtube.com/watch?v=ICEqywt012k">
-        <img src="img/jordan.jpeg">
-        </a>
-    </div>
-
-    <div id="content">
-            <h1>Welcome to my corner of the internet !</h1>
-        <div class="header">
-            <h2> "A Little Introduction"</h2>
-        </div>
+    <div id="content"> </div>
         
-     <div class="content">
-        <p> Hi, my name is Jordan Grant and I'm currently a rising junior at 
-            the University at Buffalo ! My major is computer science with a minor in linguistics
-            and some of my hobbies as of recent include learning russian as well as writing personal stories. .
-        </p>
-        <p> I am a 2x STEP intern. Last Summer I worked on the Frameworks web team where I worked alongside 
-            my podmate to work to  create an internal debugging tool for internal google web
-            frameworks in the Google SunnyVale office. Althoguh this was my first real Work experience
-            It cemented my interests in computer science and the memeories I made over that summer were
-            unforgettable.
-        </p>
-        <p>
-           Althoguh I'm only a Rising Junior nor as well as the fcat that I'm nowhere near the smartest person
-           I know, I want this page to represent my progress as I grow. Becuase I want to share with the world
-          all the places that I will go.
-        </p>
+     <div class="content-container">
+       <div class="content-left"></div>
+        <div class="content-center">
+          <div class="homepage-container">
+            <div class="about">
+              <h1 style: "font-size:50px" > Jordan Grant</h1>
+              <h2 class="introduction"> University at Buffalo, Computer Science & Linguistics </h2>
+              <br>
+              <img src="img/jordan.jpeg" class="jordan">
+              <a href="./about.html"><h2 class="pages">About Me</h2></a>
+              <a href="./experience.html"><h2 class="pages">Experience</h2></a>
+              <a href="./russian.html">
+                <h2 class="pages">Russian Learning</h2>
+              </a>
+              <a href="./comments.html">
+                <h2 class="pages">Comments</h2>
+              </a>
+            </div>
+            <div class="contact">
+              <a href="https://www.linkedin.com/in/jordangrant424/">
+                <img class = "logo" src="img/linkedin.png" border = "0" width="50" height="50">
+              </a>
+              <a href="http://github.com/TcgVanguardTroll/">
+                <img class = "logo" src="img/github.png" border = "0" width="50" height="50">
+              </a>
+                <a href="mailto:jordangrant46@gmail.com">
+                  <img class = "logo"  src="img/mail.png" border = "0" width="50" height="50">
+                </a> 
+            </div>
+          </div>
+        </div>
+       <div class="content-right"></div>
     </div>
-
-      <p>Click here to get a brief overview of who I am :</p>
-        <button onclick="addRandomFact()">One fact about me is </button>
-      <div id="fact-container"></div>
-    </div>
-    <div class="comments">
-        <table id = "comment-container"> </table>
-        <form action = "/data" method="POST">
-            <p>Leave a comment :) </p>
-            <textarea name="name" placeholder="Write Your Name Here"></textarea>
-            <textarea name="comment" placeholder="Write Comment Here"></textarea>
-            <br><br>
-            <input type="submit"/>
-            <br><br>
-        </form>
-    </div>
-    <table id = "comment-container"> </table>
   </body>
 </html>
