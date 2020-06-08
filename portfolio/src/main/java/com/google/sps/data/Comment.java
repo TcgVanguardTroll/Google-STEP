@@ -19,9 +19,11 @@ public class Comment {
 
   private final String name;
   private final String comment;
+  private final int sentiment;
 
-  public Comment(String name, String comment) {
+  public Comment(String name, String comment, int sentiment) {
     this.name = name;
     this.comment = comment;
+    this.sentiment = sentiment;
   }
 }

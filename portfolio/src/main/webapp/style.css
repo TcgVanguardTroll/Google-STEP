@@ -2,7 +2,7 @@ body {
     font-size: 15px;
     font-family: "Comic Sans MS", cursive, sans-serif;
     background: url("./img/congruent_pentagon.png"), #6F4A38;
-    background-repeat: repeat;
+    /* background-repeat: repeat; */
 }
 
 .jordan {
@@ -28,9 +28,29 @@ img[class^=logo] {
   margin:0 3em;
 }
 
+.about {
+  grid-area: about;
+}
 
 .pages {
   padding: 15pt;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: rgba(204, 250, 207, 0.3);
+  position: relative;
+  left: 20%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  text-align: center;
+  padding: 40px 30px;
+  padding-bottom: 30px;
+  text-decoration: none;
+  font-size: 20px;
 }
 
 .content-container {
@@ -48,6 +68,10 @@ img[class^=logo] {
   text-align: center;
   padding: 5px 0;
   align-items: center;
+}
+
+h1 {
+  font-size: 30pt;
 }
 
 .right {
@@ -97,10 +121,6 @@ img[class^=logo] {
 #fact-container {
   margin-top: 20px;
 }
-
-.theme-icon {
-  display: none;
-}  
 
 
 #logo img{

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
+@WebServlet("/messages")
 public class DataServlet extends HttpServlet {
 
     // Data Structure for storing Comments.
@@ -75,7 +75,7 @@ public class DataServlet extends HttpServlet {
         }
 
         // Redirect back to the HTML page.
-        response.sendRedirect("/index.html");  
+        response.sendRedirect("/messages.html");  
         }
 
     /**

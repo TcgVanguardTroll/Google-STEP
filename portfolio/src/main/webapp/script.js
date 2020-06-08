@@ -79,11 +79,11 @@ function addRandomFact(){
         facts.splice(idx,1);
         // Add it to the page.
         factContainer.innerText = fact;
-    }
+        }
 }
 
 function getMessages(){
-    fetch('/data').then(response => response.json()).then((comments) => {
+    fetch('/comments').then(response => response.json()).then((comments) => {
         const dataListElement = document.getElementById('comment-container');
         dataListElement.innerHTML = '';
         comments.forEach((comment) => {
