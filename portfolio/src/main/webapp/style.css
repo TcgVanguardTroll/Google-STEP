@@ -5,6 +5,31 @@ body {
     /* background-repeat: repeat; */
 }
 
+#resume {
+  height: 1000px;
+  width: 80%;
+}
+
+element.style {
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+
+.left-picture {
+  margin-right: 15px;
+  margin-bottom: 15px;
+  float: left;
+}
+
+.right-picture {
+  float: right;
+}
+
+.about-text {
+  text-align: justify;
+
+}
+
 .jordan {
   vertical-align: middle;
   width: 40%;
