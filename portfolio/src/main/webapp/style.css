@@ -72,31 +72,29 @@ img[class^=logo] {
 }
 
 .navbar {
-  overflow: hidden;
-  background-color: rgba(204, 250, 207, 0.3);
-  position: relative;
-  left: 20%;
+    display: inline-block;
+
 }
 
 .navbar a {
-  float: left;
-  display: block;
-  text-align: center;
-  padding: 40px 30px;
-  padding-bottom: 30px;
-  text-decoration: none;
-  font-size: 20px;
+    float: left;
+    display: block;
+    text-align: center;
+    padding: 40px 30px;
+    padding-bottom: 30px;
+    text-decoration: none;
+    font-size: 20px;
 }
 
 .content-container {
-  display: grid;
-  grid-template-areas: 'left middle right';
-  padding: 10px;
-  align-content: center;
-  justify-content: center;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+    display: grid;
+    grid-template-areas: 'left middle right';
+    padding: 10px;
+    align-content: center;
+    justify-content: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .content-container > div {
