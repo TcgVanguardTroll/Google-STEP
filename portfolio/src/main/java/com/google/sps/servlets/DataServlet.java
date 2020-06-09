@@ -30,12 +30,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
+@WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
     // Data Structure for storing Comments.
     private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
     @Override 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Creating a Comment Query .
@@ -75,7 +74,7 @@ public class DataServlet extends HttpServlet {
         }
 
         // Redirect back to the HTML page.
-        response.sendRedirect("/index.html");  
+        response.sendRedirect("/comments.html");  
         }
 
     /**

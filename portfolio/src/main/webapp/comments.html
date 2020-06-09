@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Jordan's Site</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+      </head>
+<body onload="generateNavbar() ; getMessages()">
+    <div id="content">
+    <div class="navbar" id="jordanNav">
+    </div>
+    <div id="content-center">
+      <h1> Comments </h1>
+      <h3> Leave a Comment Below </h3>
+
+    </div>
+    <div class="comments">
+      <table id = "comment-container"></table>
+      <form action = "/comments" method= "POST">
+      <textarea name= "name" placeholder = "Write Your Name Here"></textarea>
+      <textarea name= "comment" placeholder = "Write Your Comment Here"></textarea>
+      <br><br>
+      <input type="submit"/>
+      <br><br>
+      </form>
+    </div>
+    </div>
+</body>
+</html>

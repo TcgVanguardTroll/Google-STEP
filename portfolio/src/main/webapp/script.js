@@ -50,6 +50,20 @@ function getRandomRussianWord() {
     const idxRange = Math.floor (Math.random() * russianWords.length);
     return russianWords[idxRange];
 }
+
+function generateNavbar(){
+    const div = document.createElement('div');
+    div.className = 'row';
+    div.innerHTML = `
+    <a href = "./index.html"> Home </a>
+    <a href = "./about.html"> About Me </a>
+    <a href = "./experience.html"> Experience </a>
+    <a href = "./russian.html"> Learn Russian </a>
+    <a href = "./comments.html"> Comments </a>
+    `;
+    document.getElementById('jordanNav').appendChild(div);
+}
+
 // Array containing information about Jordan Grant.
 let facts = [
     `I am currently learning russian, ${getRandomRussianWord()}`, 
@@ -83,7 +97,7 @@ function addRandomFact(){
 }
 
 function getMessages(){
-    fetch('/data').then(response => response.json()).then((comments) => {
+    fetch('/comments').then(response => response.json()).then((comments) => {
         const dataListElement = document.getElementById('comment-container');
         dataListElement.innerHTML = '';
         comments.forEach((comment) => {
