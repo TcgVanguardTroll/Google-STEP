@@ -79,7 +79,7 @@ function addRandomFact(){
         facts.splice(idx,1);
         // Add it to the page.
         factContainer.innerText = fact;
-        }
+    }
 }
 
 function getMessages(){
