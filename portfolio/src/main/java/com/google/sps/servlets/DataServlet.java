@@ -116,7 +116,6 @@ public class DataServlet extends HttpServlet {
      */
     private int getNumOfComments(HttpServletRequest request) {
         String numOfCommentsString = request.getParameter("num-comments");
-
         if (numOfCommentsString == null) {
             return -1;
         }
