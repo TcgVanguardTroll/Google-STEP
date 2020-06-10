@@ -17,7 +17,7 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
- import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
@@ -57,7 +57,7 @@ public class DataServlet extends HttpServlet {
         Gson gson = new Gson();
 
         if (numOfComments != -1) {
-            List<Entity> listResults = results.asList(FetchOptions.Builder.withLimit(numOfComments)) ;
+            List<Entity> listResults = results.asList(FetchOptions.Builder.withLimit(numOfComments));
             for (Entity entity : listResults) {
                     String name = (String) entity.getProperty("name");
                     String pageComment = (String) entity.getProperty("comment");
