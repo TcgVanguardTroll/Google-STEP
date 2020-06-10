@@ -39,8 +39,12 @@ public class DataServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Creating a Comment Query .
         Query query = new Query("Comment");
-
+        // 
         int numOfComments = getNumOfComments(request);
+
+        if(numOfComments < 1 || numOfComments > 99){
+            numOfComments == -1;
+        }
 
         // Creating a PreparedQuery storing results. 
         PreparedQuery results = datastore.prepare(query);
@@ -50,10 +54,9 @@ public class DataServlet extends HttpServlet {
 
         List<Comment> comments = new ArrayList<>();
         for (Entity entity : results.asIterable()) {
-            if( numOfComments != -1 &&  idx >= numOfComments ){
+            if( numOfComments == -1 ||  idx >= numOfComments ){
                 break ;
-            }
-            else{
+            }else{
                 String name = (String) entity.getProperty("name");
                 String pageComment = (String) entity.getProperty("comment");
                 Comment comment = new Comment(name, pageComment);
@@ -79,7 +82,7 @@ public class DataServlet extends HttpServlet {
         Entity commentEntity = new Entity("Comment");
         
         // Ensuring whether or not the user's comment and name werent null.
-        if (comment != null && name != null ) {
+        if (comment != null && name != null) {
             commentEntity.setProperty("name", name);
             commentEntity.setProperty("comment", comment);
             // Putting the comment entity within the datastore.  
@@ -103,25 +106,25 @@ public class DataServlet extends HttpServlet {
         //   Get name from form.
         return request.getParameter("name");
   }
-  
+
+      /**
+    * @return -1 in the case of malformed input, if not the function will return the 
+    *          int equaivlent of the ammount of comments within the string.         
+    */
     private int getNumOfComments(HttpServletRequest request) {
         String numOfCommentsString = request.getParameter("num-comments");
-
+        
         if(numOfCommentsString == null){
-            return -1 ;
+            return -1;
         }
-
         int comments;
         try {
             comments = Integer.parseInt(numOfCommentsString);
-        }   catch (NumberFormatException e) {
-                return -1;
+        }   
+        catch (NumberFormatException e) {
+            return -1;
     }
-
-    if (comments < 1 || comments >= 99) {
-      return -1;
-    }
-    return comments;
+        return comments;
   }
 }
 

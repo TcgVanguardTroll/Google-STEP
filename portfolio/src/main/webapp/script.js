@@ -111,9 +111,7 @@ function getMessages(){
  * Deletes comments from the server.
  */
 function deleteComments() {
-  fetch('/delete-data', {method: 'POST'}).then(response => response.json()).then(() => {
-    getMessages();
-  });
+  fetch('/delete-data', {method: 'POST'}).then(getMessages());
 }
 
 /** 
