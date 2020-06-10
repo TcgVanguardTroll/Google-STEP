@@ -47,26 +47,20 @@ public class DataServlet extends HttpServlet {
         }
 
         // Creating a PreparedQuery storing results.
-        PreparedQuery results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numOfComments));
+        PreparedQuery results;
         // Storing comment querys within Array.
-
-        int idx = 0;
 
         List<Comment> comments = new ArrayList<>();
         Gson gson = new Gson();
 
         if (numOfComments != -1) {
+            results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numOfComments)) ;
             for (Entity entity : results.asIterable()) {
-                if (idx >= numOfComments) {
-                    break;
-                } else {
                     String name = (String) entity.getProperty("name");
                     String pageComment = (String) entity.getProperty("comment");
                     Comment comment = new Comment(name, pageComment);
                     comments.add(comment);
                 }
-                idx++;
-            }
         }
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(comments));
