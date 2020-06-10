@@ -14,18 +14,21 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+ import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Servlet that returns some example content.
  */
@@ -47,15 +50,15 @@ public class DataServlet extends HttpServlet {
         }
 
         // Creating a PreparedQuery storing results.
-        PreparedQuery results;
+        PreparedQuery results = datastore.prepare(query);
         // Storing comment querys within Array.
 
         List<Comment> comments = new ArrayList<>();
         Gson gson = new Gson();
 
         if (numOfComments != -1) {
-            results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numOfComments)) ;
-            for (Entity entity : results.asIterable()) {
+            List<Entity> listResults = results.asList(FetchOptions.Builder.withLimit(numOfComments)) ;
+            for (Entity entity : listResults) {
                     String name = (String) entity.getProperty("name");
                     String pageComment = (String) entity.getProperty("comment");
                     Comment comment = new Comment(name, pageComment);
