@@ -14,7 +14,7 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servlet that returns some example content. TODO: modify this file to handle comments data
+ * Servlet that returns some example content.
  */
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
@@ -35,7 +35,6 @@ public class DataServlet extends HttpServlet {
     // Data Structure for storing Comments.
     private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    @Override
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Creating a Comment Query .
@@ -48,7 +47,7 @@ public class DataServlet extends HttpServlet {
         }
 
         // Creating a PreparedQuery storing results.
-        PreparedQuery results = datastore.prepare(query);
+        PreparedQuery results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numOfComments));
         // Storing comment querys within Array.
 
         int idx = 0;
@@ -57,7 +56,6 @@ public class DataServlet extends HttpServlet {
         Gson gson = new Gson();
 
         if (numOfComments != -1) {
-
             for (Entity entity : results.asIterable()) {
                 if (idx >= numOfComments) {
                     break;
@@ -69,12 +67,9 @@ public class DataServlet extends HttpServlet {
                 }
                 idx++;
             }
-            response.setContentType("application/json;");
-            response.getWriter().println(gson.toJson(comments));
-        } else {
-            response.setContentType("application/json;");
-            response.getWriter().println(gson.toJson(comments));
         }
+        response.setContentType("application/json;");
+        response.getWriter().println(gson.toJson(comments));
     }
 
     @Override
