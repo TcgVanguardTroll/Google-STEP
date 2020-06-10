@@ -97,13 +97,23 @@ function addRandomFact(){
 }
 
 function getMessages(){
-    fetch('/comments').then(response => response.json()).then((comments) => {
+    var numComments = document.getElementById("num-comments").value;
+    fetch('/comments?num-comments='+ numComments).then(response => response.json()).then((comments) => {
         const dataListElement = document.getElementById('comment-container');
         dataListElement.innerHTML = '';
         comments.forEach((comment) => {
             dataListElement.appendChild(createElementForComment(comment));
         })
     });
+}
+
+/**
+ * Deletes comments from the server.
+ */
+function deleteComments() {
+  fetch('/delete-data', {method: 'POST'}).then(response => response.json()).then(() => {
+    getMessages();
+  });
 }
 
 /** 
