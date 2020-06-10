@@ -14,59 +14,67 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.*;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/**
+ * Servlet that returns some example content. TODO: modify this file to handle comments data
+ */
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
 
     // Data Structure for storing Comments.
-    private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    @Override 
+    private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+    @Override
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Creating a Comment Query .
         Query query = new Query("Comment");
-        // 
+        //
         int numOfComments = getNumOfComments(request);
 
-        if(numOfComments < 1 || numOfComments > 99){
-            numOfComments == -1;
+        if (numOfComments < 1 || numOfComments > 99) {
+            numOfComments = -1;
         }
 
-        // Creating a PreparedQuery storing results. 
+        // Creating a PreparedQuery storing results.
         PreparedQuery results = datastore.prepare(query);
-        // Storing comment querys within Array. 
+        // Storing comment querys within Array.
 
         int idx = 0;
 
         List<Comment> comments = new ArrayList<>();
-        for (Entity entity : results.asIterable()) {
-            if( numOfComments == -1 ||  idx >= numOfComments ){
-                break ;
-            }else{
-                String name = (String) entity.getProperty("name");
-                String pageComment = (String) entity.getProperty("comment");
-                Comment comment = new Comment(name, pageComment);
-                comments.add(comment);
-            }
-            idx++;
-        } 
         Gson gson = new Gson();
-        response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(comments));   
+
+        if (numOfComments != -1) {
+
+            for (Entity entity : results.asIterable()) {
+                if (idx >= numOfComments) {
+                    break;
+                } else {
+                    String name = (String) entity.getProperty("name");
+                    String pageComment = (String) entity.getProperty("comment");
+                    Comment comment = new Comment(name, pageComment);
+                    comments.add(comment);
+                }
+                idx++;
+            }
+            response.setContentType("application/json;");
+            response.getWriter().println(gson.toJson(comments));
+        } else {
+            response.setContentType("application/json;");
+            response.getWriter().println(gson.toJson(comments));
+        }
     }
 
     @Override
@@ -77,55 +85,52 @@ public class DataServlet extends HttpServlet {
         // Get the name from the form.
         String name = getName(request);
 
-        
-        // Create an entity representing the users comment. 
+
+        // Create an entity representing the users comment.
         Entity commentEntity = new Entity("Comment");
-        
+
         // Ensuring whether or not the user's comment and name werent null.
         if (comment != null && name != null) {
             commentEntity.setProperty("name", name);
             commentEntity.setProperty("comment", comment);
-            // Putting the comment entity within the datastore.  
+            // Putting the comment entity within the datastore.
             datastore.put(commentEntity);
         }
 
         // Redirect back to the HTML page.
-        response.sendRedirect("/comments.html");  
-        }
+        response.sendRedirect("/comments.html");
+    }
 
     /**
-    * @return the request parameter, or the default value if the parameter
-    *         was not specified by the client
-    */
+     * @return the request parameter, or the default value if the parameter
+     * was not specified by the client
+     */
     private String getComment(HttpServletRequest request) {
         //   Get comment from form.
         return request.getParameter("comment");
-  }
+    }
 
     private String getName(HttpServletRequest request) {
         //   Get name from form.
         return request.getParameter("name");
-  }
+    }
 
-      /**
-    * @return -1 in the case of malformed input, if not the function will return the 
-    *          int equaivlent of the ammount of comments within the string.         
-    */
+    /**
+     * @return -1 in the case of malformed input, if not the function will return the
+     * int equaivlent of the ammount of comments within the string.
+     */
     private int getNumOfComments(HttpServletRequest request) {
         String numOfCommentsString = request.getParameter("num-comments");
-        
-        if(numOfCommentsString == null){
+
+        if (numOfCommentsString == null) {
             return -1;
         }
         int comments;
         try {
             comments = Integer.parseInt(numOfCommentsString);
-        }   
-        catch (NumberFormatException e) {
+            return comments;
+        } catch (NumberFormatException e) {
             return -1;
+        }
     }
-        return comments;
-  }
 }
-
-
