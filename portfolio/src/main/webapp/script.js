@@ -13,45 +13,7 @@
 // limitations under the License.
 
 
-const russianWords = 
-`и
-в
-не
-на
-я
-что
-быть
-с
-он
-а
-это
-как
-то
-этот
-по
-к
-но
-они
-мы
-она
-который
-из
-у
-же
-год
-человек
-нехитрый
-мерзавец
-юго
-дистанционный
-окрасить` .split(/\r?\n/);
-// Function that returns russian word from russianWords.
-function getRandomRussianWord() {
-    const idxRange = Math.floor (Math.random() * russianWords.length);
-    return russianWords[idxRange];
-}
-
-function generateNavbar(){
+const generateNavbar = () => {
     const div = document.createElement('div');
     div.className = 'row';
     div.innerHTML = `
@@ -62,21 +24,22 @@ function generateNavbar(){
     <a href = "./comments.html"> Comments </a>
     `;
     document.getElementById('jordanNav').appendChild(div);
-}
+};
 
 // Array containing information about Jordan Grant.
-let facts = [
-    `I am currently learning russian, ${getRandomRussianWord()}`, 
+const facts = [
+    `I am currently learning russian, ${getRandomRussianWord()}`,
     'I am interested in compilers and progamming languages.',
     'I have interned at Google twice !',
     'I have lived in three states: California, New York, and Virginia.!',
     'I enjoy writing and watching fantasy.',
     'I am a member of NSBE.',
-    'I like Playing JRPGS like Disgaea and Persona ', 
+    'I like Playing JRPGS like Disgaea and Persona ',
     `My favorite show is Law and Order: Special Victims Unit !`
 ];
-// function that returns a random Fact about Jordan Grant.
-function addRandomFact(){
+
+// Function that returns a random Fact about Jordan Grant.
+const addRandomFact = () => {
 
     // Store index in variable for future use.
     const idx = Math.floor(Math.random() * facts.length);
@@ -86,19 +49,19 @@ function addRandomFact(){
     // Gets Fact container element.
     const factContainer = document.getElementById('fact-container');
     // Trcaks the item in array if 0 end.
-    if(facts.length == 0){
+    if (facts.length === 0) {
         factContainer.innerText = "Thats all the facts about me !";
     } else {
-        // Pop element via index. 
-        facts.splice(idx,1);
+        // Pop element via index.
+        facts.splice(idx, 1);
         // Add it to the page.
         factContainer.innerText = fact;
     }
-}
+};
 
-function getMessages(){
-    var numComments = document.getElementById("num-comments").value;
-    fetch('/comments?num-comments='+ numComments).then(response => response.json()).then((comments) => {
+const getMessages = () => {
+    const numComments = document.getElementById("num-comments").value;
+    fetch('/comments?num-comments=' + numComments).then(response => response.json()).then((comments) => {
         const dataListElement = document.getElementById('comment-container');
         dataListElement.innerHTML = '';
         comments.forEach((comment) => {
@@ -107,27 +70,36 @@ function getMessages(){
     });
 }
 
+const getRussianWordForFlashCard = () => {
+    fetch('/russian').then(response => response.json()).then((russianWord) => {
+        const frontOfFlashCard = document.getElementById("flip-card-front");
+        const backOfFlashCard = document.getElementById("flip-card-back");
+        frontOfFlashCard.innerHTML = ` <p> russianWord.name </p> `;
+        backOfFlashCard.innerText = ` <p> russianWord.translate </p> `;
+    })
+}
+
 /**
  * Deletes comments from the server.
  */
 function deleteComments() {
-  fetch('/delete-data', {method: 'POST'}).then(getMessages());
+    fetch('/delete-data', {method: 'POST'}).then(getMessages());
 }
 
-/** 
- * Creates an table row element,<tr><td> </td></tr>, containing text. 
+/**
+ * Creates an table row element,<tr><td> </td></tr>, containing text.
  */
 function createElementForComment(commentObj) {
-  const trElement = document.createElement('tr');
-  const thElement = document.createElement('th');
-  const tdElement = document.createElement('td');
-  
-  thElement.innerText = commentObj.name;
-  tdElement.innerText = '"' + commentObj.comment + '"';
+    const trElement = document.createElement('tr');
+    const thElement = document.createElement('th');
+    const tdElement = document.createElement('td');
 
-  thText = thElement.outerHTML;
-  tdText = tdElement.outerHTML;
+    thElement.innerText = commentObj.name;
+    tdElement.innerText = '"' + commentObj.comment + '"';
 
-  trElement.innerHTML = thText + tdText;
-  return trElement;
+    thText = thElement.outerHTML;
+    tdText = tdElement.outerHTML;
+
+    trElement.innerHTML = thText + tdText;
+    return trElement;
 }
