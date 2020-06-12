@@ -25,6 +25,7 @@ import com.google.cloud.translate.Translation;
 public class Word {
 
     private final String translated;
+    private final String word;
 
 
     /**
@@ -32,6 +33,7 @@ public class Word {
      * @param targetLanguage The language that the word is in.
      */
     public Word(String word, String targetLanguage) {
+        this.word = word;
         this.translated = translateWord(word, targetLanguage);
     }
 
