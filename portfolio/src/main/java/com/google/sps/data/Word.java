@@ -24,8 +24,6 @@ import com.google.cloud.translate.Translation;
  */
 public class Word {
 
-    private final String word;
-    private final String targetLanguage;
     private final String translated;
 
 
@@ -34,14 +32,16 @@ public class Word {
      * @param targetLanguage The language that the word is in.
      */
     public Word(String word, String targetLanguage) {
-        this.word = word;
-        this.targetLanguage = targetLanguage;
         this.translated = translateWord(word, targetLanguage);
     }
 
     private String translateWord(String word, String targetLanguage) {
         Translate translate = TranslateOptions.getDefaultInstance().getService();
-        Translation translation = translate.translate(word, TranslateOption.sourceLanguage("ru"), Translate.TranslateOption.targetLanguage(targetLanguage));
+        Translation translation = translate.translate(word, TranslateOption.sourceLanguage("en"), Translate.TranslateOption.targetLanguage(targetLanguage));
         return translation.getTranslatedText();
+    }
+
+    private String getTranslated() {
+        return translated;
     }
 }

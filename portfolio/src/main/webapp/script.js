@@ -71,10 +71,10 @@ const getMessages = () => {
 
 const getRussianWordForFlashCard = () => {
     fetch('/russian').then(response => response.json()).then((russianWord) => {
-        frontOfFlashCard = document.getElementById("flip-card-front");
-        backOfFlashCard = document.getElementById("flip-card-back")
-        frontOfFlashCard.innerHTML = russianWord.word;
-        backOfFlashCard.innerText = russianWord.translated;
+        let frontOfFlashCard = document.getElementById("flip-card-front");
+        let backOfFlashCard = document.getElementById("flip-card-back")
+        frontOfFlashCard.innerHTML = russianWord.translated;
+        backOfFlashCard.innerText = russianWord.word;
     });
 }
 

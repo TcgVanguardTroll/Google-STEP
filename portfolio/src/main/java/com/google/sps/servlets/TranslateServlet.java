@@ -61,7 +61,7 @@ public class TranslateServlet extends HttpServlet {
         String russianWord = getRandomRussianWord();
 
         // Helper Function that generates new russian word class from the fetched russian word in array.
-        Word wordToSend = new Word(russianWord, "en");
+        Word wordToSend = new Word(russianWord, "ru");
 
         // Prints russian word to the console.
         try {
@@ -79,7 +79,7 @@ public class TranslateServlet extends HttpServlet {
         // Data Structure to store the words.
         untranslated = new ArrayList<>();
         // File reader used to get the foreign language vocabulary.
-        BufferedReader fileToBeRead = new BufferedReader(new FileReader(new File("./files/ru.txt")));
+        BufferedReader fileToBeRead = new BufferedReader(new FileReader(new File("./files/words.txt")));
         // String representing the word to be translated.
         String russianWord;
         // While line is available add words to array.
