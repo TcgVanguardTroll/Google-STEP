@@ -14,17 +14,10 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.*;
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.TranslateOptions;
-import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
-import com.google.sps.data.Comment;
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.TranslateOptions;
+
 import com.google.sps.data.Word;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +41,7 @@ public class TranslateServlet extends HttpServlet {
     // Data-Structure for storing words in russian.
     List<String> untranslated;
 
-     @Override
+    @Override
     public void init() {
         try {
             getRussianWords();
@@ -95,10 +88,10 @@ public class TranslateServlet extends HttpServlet {
         }
     }
 
-    private String convertWordToJson(Word word){
-            Gson gson = new Gson();
-            String json = gson.toJson(word);
-            return json;
+    private String convertWordToJson(Word word) {
+        Gson gson = new Gson();
+        String json = gson.toJson(word);
+        return json;
     }
 
     // Function that returns russian word from russianWords.
