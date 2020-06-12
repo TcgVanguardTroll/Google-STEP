@@ -3,6 +3,9 @@ body {
     font-family: "Comic Sans MS", cursive, sans-serif;
     background: url("./img/congruent_pentagon.png"), #6F4A38;
     background-repeat: repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #resume {
@@ -97,9 +100,10 @@ img[class^=logo] {
 .flashcard-area{
     width: 300px;
     height: 400px;
-    display: flex;
+    display: inline-block;
     justify-content: center;
     align-items: center;
+
 
 }
 
@@ -115,12 +119,15 @@ img[class^=logo] {
     transform-style: preserve-3d;
 }
 
-#flip-card-front, .flip-card-back{
+#flip-card-front, #flip-card-back{
     position: absolute;
     height: 100%;
     width: 100%;
     font-size: 2rem;
     backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #flip-card-front{

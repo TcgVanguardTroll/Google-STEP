@@ -28,7 +28,6 @@ const generateNavbar = () => {
 
 // Array containing information about Jordan Grant.
 const facts = [
-    `I am currently learning russian, ${getRandomRussianWord()}`,
     'I am interested in compilers and progamming languages.',
     'I have interned at Google twice !',
     'I have lived in three states: California, New York, and Virginia.!',
@@ -72,11 +71,11 @@ const getMessages = () => {
 
 const getRussianWordForFlashCard = () => {
     fetch('/russian').then(response => response.json()).then((russianWord) => {
-        const frontOfFlashCard = document.getElementById("flip-card-front");
-        const backOfFlashCard = document.getElementById("flip-card-back");
-        frontOfFlashCard.innerHTML = ` <p> russianWord.name </p> `;
-        backOfFlashCard.innerText = ` <p> russianWord.translate </p> `;
-    })
+        frontOfFlashCard = document.getElementById("flip-card-front");
+        backOfFlashCard = document.getElementById("flip-card-back")
+        frontOfFlashCard.innerHTML = russianWord.word ;
+        backOfFlashCard.innerText = russianWord.translated;
+    });
 }
 
 /**

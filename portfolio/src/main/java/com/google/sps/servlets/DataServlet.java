@@ -22,7 +22,6 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 /**
- * Servlet that handles user comment data. This servlet maps tot he comments directory.
+ * Servlet that returns some example content.
  */
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
@@ -40,13 +38,6 @@ public class DataServlet extends HttpServlet {
     // Data Structure for storing Comments.
     private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    /**
-     * This function is called whenever the servlet directory is visited.
-     *
-     * @param request  Http Servlet request.
-     * @param response Response from HTTP servlet request.
-     * @throws IOException
-     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Creating a Comment Query .
@@ -68,11 +59,11 @@ public class DataServlet extends HttpServlet {
         if (numOfComments != -1) {
             List<Entity> listResults = results.asList(FetchOptions.Builder.withLimit(numOfComments));
             for (Entity entity : listResults) {
-                String name = (String) entity.getProperty("name");
-                String pageComment = (String) entity.getProperty("comment");
-                Comment comment = new Comment(name, pageComment);
-                comments.add(comment);
-            }
+                    String name = (String) entity.getProperty("name");
+                    String pageComment = (String) entity.getProperty("comment");
+                    Comment comment = new Comment(name, pageComment);
+                    comments.add(comment);
+                }
         }
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(comments));

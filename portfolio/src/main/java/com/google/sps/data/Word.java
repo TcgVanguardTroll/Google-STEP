@@ -14,32 +14,36 @@
 
 package com.google.sps.data;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import com.google.cloud.translate.Detection;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.Translation;
 
 /** A Public class representing a word. */
 public class Word {
 
-    private final String name;
-    private final String langCode;
-    private final String translated;
+    private  String word;
+    private  String targetLanguage;
+    private  String translated;
+
+
 
     /**
-     * @param name The Word itself.
-     * @param langCode The language that the word is in.
+     * @param word The Word itself.
+     * @param targetLanguage The language that the word is in.
      */
-    public Word(String name, String langCode) {
-        this.name = name;
-        this.langCode = langCode;
-        this.translated = translateWord(name,langCode);
+    public Word(String word, String targetLanguage) {
+        this.word = word;
+        this.targetLanguage = targetLanguage;
+        this.translated = translateWord(word,targetLanguage);
     }
 
-    private String translateWord(String name, String langCode){
+    private String translateWord(String word, String targetLanguage){
         Translate translate = TranslateOptions.getDefaultInstance().getService();
-        Translation translation = translate.translate(name, Translate.TranslateOption.targetLanguage(langCode));
+        Translation translation = translate.translate(word,TranslateOption.sourceLanguage("ru"), Translate.TranslateOption.targetLanguage(targetLanguage));
         return translation.getTranslatedText();
     }
-
-    Word test = new Word("hello","ru");
 }
