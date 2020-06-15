@@ -85,20 +85,39 @@ function deleteComments() {
     fetch('/delete-data', {method: 'POST'}).then(getMessages());
 }
 
-/**
- * Creates an table row element,<tr><td> </td></tr>, containing text.
- */
-function createElementForComment(commentObj) {
-    const trElement = document.createElement('tr');
-    const thElement = document.createElement('th');
-    const tdElement = document.createElement('td');
+/** Get login status of the user */
+function getUserLoginStatus() {
+    fetch('/login').then(response => response.json()).then((message) => {
+        // Get login status from JSON response
+        const loginStatus = message.loginStatus;
 
-    thElement.innerText = commentObj.name;
-    tdElement.innerText = '"' + commentObj.comment + '"';
+        // Create link element to display login/logout URL to user
+        const linkElement = document.createElement('a');
+        linkElement.href = message.url;
 
-    thText = thElement.outerHTML;
-    tdText = tdElement.outerHTML;
+        const loginContainer = document.getElementById('login-container');
+        loginContainer.appendChild(linkElement);
 
-    trElement.innerHTML = thText + tdText;
-    return trElement;
+        // Add login/logout link and show/hide comments based on login status
+        linkElement.innerText = loginStatus ? "Logout" : "Login";
+        document.getElementById('comments-container').style.display = loginStatus ? 'block' : 'none';
+    });
+
+    /**
+     * Creates an table row element,<tr><td> </td></tr>, containing text.
+     */
+    function createElementForComment(commentObj) {
+        const trElement = document.createElement('tr');
+        const thElement = document.createElement('th');
+        const tdElement = document.createElement('td');
+
+        thElement.innerText = commentObj.name;
+        tdElement.innerText = '"' + commentObj.comment + '"';
+
+        thText = thElement.outerHTML;
+        tdText = tdElement.outerHTML;
+
+        trElement.innerHTML = thText + tdText;
+        return trElement;
+    }
 }

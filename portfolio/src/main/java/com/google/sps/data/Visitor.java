@@ -14,16 +14,24 @@
 
 package com.google.sps.data;
 
-/** An item on a todo list. */
-public class Comment {
+/**
+ * Class representing a site visitor.
+ */
+public class Visitor {
 
-  private final String name;
-  private final String comment;
-  private final String email;
+    private final boolean loginStatus;
+    private final String url;
 
-  public Comment(String name, String comment, String email) {
-    this.name = name;
-    this.comment = comment;
-    this.email = email;
-  }
+    public Visitor(boolean loginStatus, String url) {
+        this.loginStatus = loginStatus;
+        this.url = url;
+    }
+
+    public boolean isLoginStatus() {
+        return loginStatus;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

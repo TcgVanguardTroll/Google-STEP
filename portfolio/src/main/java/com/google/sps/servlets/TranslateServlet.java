@@ -29,8 +29,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Servlet utilized for the translation app.
@@ -41,10 +40,16 @@ public class TranslateServlet extends HttpServlet {
     // Data-Structure for storing words in russian.
     List<String> untranslated;
 
+    Set<String> langCodes;
+
+    /**
+     * Initialization function that populates the untranslated array with strings representing words to be translated.
+     */
     @Override
     public void init() {
         try {
-            getRussianWords();
+            getWords();
+            populateLanguageCodes();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,11 +62,11 @@ public class TranslateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
-        // Fetches a random Russian Word generated from text file.
-        String russianWord = getRandomRussianWord();
+        // Fetches a random Word generated from untranslated array.
+        String russianWord = getRandomWord();
 
         // Helper Function that generates new russian word class from the fetched russian word in array.
-        Word wordToSend = new Word(russianWord, "ru");
+        Word wordToSend = getNewWord();
 
         // Prints russian word to the console.
         try {
@@ -75,7 +80,12 @@ public class TranslateServlet extends HttpServlet {
         }
     }
 
-    private void getRussianWords() throws IOException {
+    /**
+     * Function that populates the untranslated array.
+     *
+     * @throws IOException
+     */
+    private void getWords() throws IOException {
         // Data Structure to store the words.
         untranslated = new ArrayList<>();
         // File reader used to get the foreign language vocabulary.
@@ -88,14 +98,50 @@ public class TranslateServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Generates all ISO language codes and adds them to the languageCodes set.
+     */
+    private void populateLanguageCodes() {
+        // String array that is populated with ISO language codes.
+        String[] isoLanguages = Locale.getISOLanguages();
+        // Populates the langCodes set with the strings within isoLanguages string array.
+        langCodes.addAll(Arrays.asList(isoLanguages));
+
+    }
+
+    /**
+     * Factory function that returns a new word
+     *
+     * @return A new instance of the Word class.
+     * TODO(grantjustice) Implement a way in order for me to get a language code from parameter to incorporate
+     * non russian words .
+     */
+    private Word getNewWord() {
+        String word = getRandomWord();
+        String langToTranslateTo;
+        if (!langCodes.contains("ru")) {
+            langToTranslateTo = "en";
+        } else {
+            langToTranslateTo = "ru";
+        }
+        return new Word(word, langToTranslateTo);
+    }
+
+    /**
+     * @param word
+     * @return
+     */
     private String convertWordToJson(Word word) {
         Gson gson = new Gson();
         String json = gson.toJson(word);
         return json;
     }
 
+    /**
+     * @return String representing a random word form within the untranslated array.
+     */
     // Function that returns russian word from russianWords.
-    private String getRandomRussianWord() {
+    private String getRandomWord() {
         int idxRange = (int) Math.floor(Math.random() * untranslated.size());
         return untranslated.get(idxRange);
     }
