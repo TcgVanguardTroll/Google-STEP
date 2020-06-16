@@ -1,0 +1,2 @@
+<p>To leave a comment, login <a href="%s">here.</a></p>
+<p>Or, <a onclick="getGuestMode()" href="#">continue as a guest.</a></p>

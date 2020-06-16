@@ -79,29 +79,36 @@ const getRussianWordForFlashCard = () => {
 }
 
 /**
+ * Fetches comment form the servers based on input.
+ */
+function setAuthMode(input) {
+    fetch(input).then(response => response.json()).then((status) => {
+        const form = document.getElementById('comment-form');
+        form.innerHTML = status;
+        getMessages();
+    });
+}
+
+/**
+ * Sets user mode for commenting.
+ */
+function getUserMode() {
+    setAuthMode("/login");
+}
+
+/**
+ * Sets guest mode for commenting.
+ */
+function getGuestMode() {
+    setAuthMode("/login?guest=true");
+}
+
+/**
  * Deletes comments from the server.
  */
 function deleteComments() {
     fetch('/delete-data', {method: 'POST'}).then(getMessages());
 }
-
-/** Get login status of the user */
-function getUserLoginStatus() {
-    fetch('/login').then(response => response.json()).then((message) => {
-        // Get login status from JSON response
-        const loginStatus = message.loginStatus;
-
-        // Create link element to display login/logout URL to user
-        const linkElement = document.createElement('a');
-        linkElement.href = message.url;
-
-        const loginContainer = document.getElementById('login-container');
-        loginContainer.appendChild(linkElement);
-
-        // Add login/logout link and show/hide comments based on login status
-        linkElement.innerText = loginStatus ? "Logout" : "Login";
-        document.getElementById('comments-container').style.display = loginStatus ? 'block' : 'none';
-    });
 
     /**
      * Creates an table row element,<tr><td> </td></tr>, containing text.

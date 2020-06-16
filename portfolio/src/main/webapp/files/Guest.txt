@@ -1,0 +1,3 @@
+<p>Welcome, guest!</p>
+<p>To sign in with your email, <a href="%s">login</a>.</p>
+<p>Otherwise, leave a display name and your comment below. Thanks for the feedback!</p>
