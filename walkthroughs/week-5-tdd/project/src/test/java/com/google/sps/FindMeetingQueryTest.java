@@ -43,6 +43,7 @@ public final class FindMeetingQueryTest {
     // All dates are the first day of the year 2020.
     private static final int TIME_0800AM = TimeRange.getTimeInMinutes(8, 00);
     private static final int TIME_0830AM = TimeRange.getTimeInMinutes(8, 30);
+    private static final int TIME_0845AM = TimeRange.getTimeInMinutes(8, 45);
     private static final int TIME_0900AM = TimeRange.getTimeInMinutes(9, 00);
     private static final int TIME_0930AM = TimeRange.getTimeInMinutes(9, 30);
     private static final int TIME_1000AM = TimeRange.getTimeInMinutes(10, 00);
@@ -258,6 +259,25 @@ public final class FindMeetingQueryTest {
 
         Collection<Event> events = Arrays.asList(
                 new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
+                        Arrays.asList(PERSON_A)),
+                new Event("Event 2", TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true),
+                        Arrays.asList(PERSON_A)));
+
+        MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_30_MINUTES);
+
+        Collection<TimeRange> actual = query.query(events, request);
+        Collection<TimeRange> expected =
+                Arrays.asList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void ignoreOptionalAttendee() {
+        Collection<Event> events = Arrays.asList(
+                new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
+                        Arrays.asList(PERSON_A)),
+                new Event("Event 1.5", TimeRange.fromStartEnd(TIME_0830AM, TIME_0845AM, false),
                         Arrays.asList(PERSON_A)),
                 new Event("Event 2", TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true),
                         Arrays.asList(PERSON_A)));
