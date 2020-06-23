@@ -73,7 +73,7 @@ public final class FindMeetingQuery {
             // Collection of the pople who are to attend meeting.
             attendees = event.getAttendees();
 
-            //Ignore event only if attendees of this event are not needed in requested meeting
+            // Ignore event only if attendees of this event are not needed in requested meeting
             for (String attendee : attendees) {
                 // If this attendee is required
                 if (requestAttendees.contains(attendee)) {
@@ -96,8 +96,8 @@ public final class FindMeetingQuery {
                 eventEnd = event.getWhen().end();
 
 
-            //  If the start of the evnt is directly after another or at the start of the day.
-            //  set start of the day to the end of the meeting.
+                //  If the start of the evnt is directly after another or at the start of the day.
+                //  set start of the day to the end of the meeting.
                 if (eventStart == timeOfStart) {
                     timeOfStart = eventEnd;
                 }
