@@ -84,7 +84,7 @@ public final class FindMeetingQuery {
                 // If at the last event.
                 if (eventCounter == numberOfEvents-1) {
                     // Add time range of current start time to end of day.
-                    query.add(TimeRange.fromStartEnd(timeOfStart, END_OF_DAY, true));
+                    query.add(TimeRange.fromStartEnd(timeOfStart, END_OF_DAY, /* inclusive= */ true));
                 }
             }
             // if the attendee is mandatory.
@@ -112,7 +112,7 @@ public final class FindMeetingQuery {
                 //Non-overlapping/non-nested events
                 if (timeOfStart <= eventStart) {
                     if (eventStart - timeOfStart >= desiredDuration) {
-                        query.add(TimeRange.fromStartEnd(timeOfStart, eventStart, false));
+                        query.add(TimeRange.fromStartEnd(timeOfStart, eventStart, /* inclusive= */ false));
                     }
                     timeOfStart = eventEnd;
                 }
@@ -120,7 +120,7 @@ public final class FindMeetingQuery {
                 // If at the last event and 
                 if (eventCounter == numberOfEvents - 1) {
                     if (timeOfStart != END_OF_DAY + 1) {
-                        query.add(TimeRange.fromStartEnd(timeOfStart, TimeRange.END_OF_DAY, true));
+                        query.add(TimeRange.fromStartEnd(timeOfStart, TimeRange.END_OF_DAY, /* inclusive= */ true));
                     }
                 }
             }
