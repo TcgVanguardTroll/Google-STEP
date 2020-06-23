@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 public final class FindMeetingQuery {
@@ -46,7 +47,7 @@ public final class FindMeetingQuery {
         int eventEnd = 0;
 
         // Set of stirngs representing unique employees set to attend this meeting.
-        Set<String> attendees = null;
+        Set<String> attendees = new HashSet();
 
         // Collection of string reprenting who is to attend the requedted meeting
         Collection<String> requestAttendees = request.getAttendees();
