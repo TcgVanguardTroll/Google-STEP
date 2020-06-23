@@ -16,6 +16,7 @@ package com.google.sps;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +46,7 @@ public final class FindMeetingQuery {
         int eventEnd = 0;
 
         // Set of stirngs representing unique employees set to attend this meeting.
-        Set<String> attendees = new Set();
+        Set<String> attendees = null;
 
         // Collection of string reprenting who is to attend the requedted meeting
         Collection<String> requestAttendees = request.getAttendees();
@@ -64,8 +65,9 @@ public final class FindMeetingQuery {
             query.add(TimeRange.WHOLE_DAY);
             return query;
         }
+
         // Iterating throguh input event collection. 
-        for (Event event : events.sort(event.ORDER_BY_START)) {
+        for (Event event : events) {
 
             // Collection of the pople who are to attend meeting.
             attendees = event.getAttendees();
@@ -126,8 +128,9 @@ public final class FindMeetingQuery {
             //  Else set the ignore case to true
             shouldIgnore = true;
         }
+        // Sorting the query by ascending order. 
+        query.sort(ORDER_BY_START);
         //  Return the meetings.
         return query;
-
     }
 }
