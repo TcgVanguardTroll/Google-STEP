@@ -33,30 +33,24 @@ public final class FindMeetingQuery {
 
         // Array of queries represenitng times to meet.
         List<TimeRange> query = new ArrayList<>();
-        
+
         int numberOfEvents = events.size();
-        
+
         int timeOfStart = START_OF_DAY;
-        
+
         int desiredDuration = (int) request.getDuration();
-        
-        //  Event counter used whilst iterating.
-        int eventCounter = 0;
-        
-        int eventStart = 0;
-        int eventEnd = 0;
 
         // Set of stirngs representing unique employees set to attend this meeting.
-        Set<String> attendees = new HashSet();
+        Set<String> attendees = new HashSet<>();
 
         // Collection of string reprenting who is to attend the requedted meeting
         Collection<String> requestAttendees = request.getAttendees();
-        
-        // Boolean used to indictae whter or not the attendee should be ignored.
+
+        // Boolean used to indictae whether or not the attendee should be ignored.
         boolean shouldIgnore = true;
 
         // Check if duration of event is longer than a whole day and if so return empty.
-        if ((int)request.getDuration() > WHOLE_DAY.duration()) {
+        if ((int) request.getDuration() > WHOLE_DAY.duration()) {
             return query;
         }
 
@@ -66,11 +60,17 @@ public final class FindMeetingQuery {
             query.add(TimeRange.WHOLE_DAY);
             return query;
         }
+        //  Event counter used whilst iterating.
+        int eventCounter = 0;
+
+        int eventStart = 0;
+
+        int eventEnd = 0;
 
         // Iterating throguh input event collection. 
         for (Event event : events) {
 
-            // Collection of the pople who are to attend meeting.
+            // Collection of the people who are to attend meeting.
             attendees = event.getAttendees();
 
             // Ignore event only if attendees of this event are not needed in requested meeting
@@ -80,24 +80,24 @@ public final class FindMeetingQuery {
                     // You shouldn't ignore this attendee. 
                     shouldIgnore = false;
                     break;
-                } 
+                }
                 // If at the last event.
-                if (eventCounter == numberOfEvents-1) {
+                if (eventCounter == numberOfEvents - 1) {
                     // Add time range of current start time to end of day.
                     query.add(TimeRange.fromStartEnd(timeOfStart, END_OF_DAY, /* inclusive= */ true));
                 }
             }
             // if the attendee is mandatory.
             if (!shouldIgnore) {
-                
+
                 // Fetch event start time.
                 eventStart = event.getWhen().start();
                 // Fetch event end time.
                 eventEnd = event.getWhen().end();
 
 
-                //  If the start of the evnt is directly after another or at the start of the day.
-                //  set start of the day to the end of the meeting.
+                //  If the start of the event is directly after another or at the start of the day,
+                //  set up potential meeting range.
                 if (eventStart == timeOfStart) {
                     timeOfStart = eventEnd;
                 }
@@ -124,13 +124,14 @@ public final class FindMeetingQuery {
                     }
                 }
             }
-            //  Increment event idx by one/
+            //  Increment event idx by one
             eventCounter += 1;
             //  Else set the ignore case to true
             shouldIgnore = true;
         }
         // Sorting the query by ascending order. 
         query.sort(ORDER_BY_START);
+
         //  Return the meetings.
         return query;
     }
