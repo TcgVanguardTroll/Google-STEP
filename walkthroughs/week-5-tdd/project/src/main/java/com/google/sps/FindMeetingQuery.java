@@ -75,8 +75,9 @@ public final class FindMeetingQuery {
       // Increment event idx by one
       eventCounter += 1;
 
-      // If the there are no common attendees.
+      // If the the only attendee someone different from the person looking to book a meeting.
       if (Collections.disjoint(eventAttendees, requestAttendees)) {
+        query.add(TimeRange.WHOLE_DAY);
         continue;
       }
 
@@ -106,20 +107,13 @@ public final class FindMeetingQuery {
         }
       }
 
-      // If at the last event.
-      if (eventCounter == numberOfEvents) {
-        // Add time range of current start time to end of day.
-        query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
-      }
-
       // If at the last event and on the same day.
       if (eventCounter == numberOfEvents) {
-        if (currentTime != END_OF_DAY + 1) {
+        if (currentTime <= END_OF_DAY) {
           query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
         }
       }
     }
-
     // Sorting the query by ascending order.
     query.sort(ORDER_BY_START);
 
