@@ -19,120 +19,111 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.HashSet;
 import java.util.Set;
 
 public final class FindMeetingQuery {
 
-    private static final int START_OF_DAY = TimeRange.START_OF_DAY;
-    private static final int END_OF_DAY = TimeRange.END_OF_DAY;
-    private static final TimeRange WHOLE_DAY = TimeRange.WHOLE_DAY;
-    private static final Comparator<TimeRange> ORDER_BY_START = TimeRange.ORDER_BY_START;
+  private static final int START_OF_DAY = TimeRange.START_OF_DAY;
+  private static final int END_OF_DAY = TimeRange.END_OF_DAY;
+  private static final TimeRange WHOLE_DAY = TimeRange.WHOLE_DAY;
+  private static final Comparator<TimeRange> ORDER_BY_START = TimeRange.ORDER_BY_START;
 
-    public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
-        // Array of queries represenitng times to meet.
-        List<TimeRange> query = new ArrayList<>();
+    /* Array of queries representing times to meet. */
+    List<TimeRange> query = new ArrayList<>();
 
-        int numberOfEvents = events.size();
+    // Copy of events used for iterating and sorting.
+    List<Event> eventsCopy = new ArrayList<>(events);
 
-        int timeOfStart = START_OF_DAY;
+    int numberOfEvents = events.size();
 
-        int desiredDuration = (int) request.getDuration();
+    int currentTime = START_OF_DAY;
 
-        // Set of stirngs representing unique employees set to attend this meeting.
-        Set<String> attendees = new HashSet<>();
+    int desiredDuration = (int) request.getDuration();
 
-        // Collection of string reprenting who is to attend the requedted meeting
-        Collection<String> requestAttendees = request.getAttendees();
+    // Collection of string representing who is to attend the requested meeting.
+    Collection<String> requestAttendees = request.getAttendees();
 
-        // Boolean used to indictae whether or not the attendee should be ignored.
-        boolean shouldIgnore = true;
-
-        // Check if duration of event is longer than a whole day and if so return empty.
-        if ((int) request.getDuration() > WHOLE_DAY.duration()) {
-            return query;
-        }
-
-        // Check if there are any events happening at all if so return whole day query.
-        if (numberOfEvents == 0) {
-            // Adds a 24 hour time range to query.
-            query.add(TimeRange.WHOLE_DAY);
-            return query;
-        }
-        //  Event counter used whilst iterating.
-        int eventCounter = 0;
-
-        int eventStart = 0;
-
-        int eventEnd = 0;
-
-        // Iterating throguh input event collection. 
-        for (Event event : events) {
-
-            // Collection of the people who are to attend meeting.
-            attendees = event.getAttendees();
-
-            // Ignore event only if attendees of this event are not needed in requested meeting
-            for (String attendee : attendees) {
-                // If this attendee is required
-                if (requestAttendees.contains(attendee)) {
-                    // You shouldn't ignore this attendee. 
-                    shouldIgnore = false;
-                    break;
-                }
-                // If at the last event.
-                if (eventCounter == numberOfEvents - 1) {
-                    // Add time range of current start time to end of day.
-                    query.add(TimeRange.fromStartEnd(timeOfStart, END_OF_DAY, /* inclusive= */ true));
-                }
-            }
-            // if the attendee is mandatory.
-            if (!shouldIgnore) {
-
-                // Fetch event start time.
-                eventStart = event.getWhen().start();
-                // Fetch event end time.
-                eventEnd = event.getWhen().end();
-
-
-                //  If the start of the event is directly after another or at the start of the day,
-                //  set up potential meeting range.
-                if (eventStart == timeOfStart) {
-                    timeOfStart = eventEnd;
-                }
-
-                // Check for overlapping/nested events
-                if (eventStart < timeOfStart) {
-                    if (eventEnd > timeOfStart) {
-                        timeOfStart = eventEnd;
-                    }
-                }
-
-                //Non-overlapping/non-nested events
-                if (timeOfStart <= eventStart) {
-                    if (eventStart - timeOfStart >= desiredDuration) {
-                        query.add(TimeRange.fromStartEnd(timeOfStart, eventStart, /* inclusive= */ false));
-                    }
-                    timeOfStart = eventEnd;
-                }
-
-                // If at the last event and 
-                if (eventCounter == numberOfEvents - 1) {
-                    if (timeOfStart != END_OF_DAY + 1) {
-                        query.add(TimeRange.fromStartEnd(timeOfStart, TimeRange.END_OF_DAY, /* inclusive= */ true));
-                    }
-                }
-            }
-            //  Increment event idx by one
-            eventCounter += 1;
-            //  Else set the ignore case to true
-            shouldIgnore = true;
-        }
-        // Sorting the query by ascending order. 
-        query.sort(ORDER_BY_START);
-
-        //  Return the meetings.
-        return query;
+    // Check if duration of event is longer than a whole day and if so return empty.
+    if ((int) request.getDuration() > WHOLE_DAY.duration()) {
+      return query;
     }
+
+    // Check if there are any events happening at all if so return whole day query.
+    if (numberOfEvents == 0) {
+      // Adds a 24 hour time range to query.
+      query.add(TimeRange.WHOLE_DAY);
+      return query;
+    }
+    //  Event counter used whilst iterating.
+    int eventCounter = 0;
+
+    int eventStart;
+
+    int eventEnd;
+
+    // Sorts the even in chronological order.
+    eventsCopy.sort((e1, e2) -> ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
+
+    // Iterating through input event collection.
+    for (Event event : eventsCopy) {
+
+      // Collection of the people who are required to attend meeting.
+      Set<String> eventAttendees = event.getAttendees();
+
+      // Increment event idx by one
+      eventCounter += 1;
+
+      // If the there are no common attendees.
+      if (Collections.disjoint(eventAttendees, requestAttendees)) {
+        continue;
+      }
+
+      // Fetch event start time.
+      eventStart = event.getWhen().start();
+      // Fetch event end time.
+      eventEnd = event.getWhen().end();
+
+      //  If the start of the event is directly after another or at the start of the day,
+      //  set up potential meeting range.
+      if (eventStart == currentTime) {
+        currentTime = eventEnd;
+      }
+
+      // Non-overlapping/non-nested events
+      if (currentTime <= eventStart) {
+        if (eventStart - currentTime >= desiredDuration) {
+          query.add(TimeRange.fromStartEnd(currentTime, eventStart, /* inclusive= */ false));
+        }
+        currentTime = eventEnd;
+      }
+
+      // Check for overlapping/nested events
+      if (eventStart < currentTime) {
+        if (eventEnd > currentTime) {
+          currentTime = eventEnd;
+        }
+      }
+
+      // If at the last event.
+      if (eventCounter == numberOfEvents) {
+        // Add time range of current start time to end of day.
+        query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
+      }
+
+      // If at the last event and on the same day.
+      if (eventCounter == numberOfEvents) {
+        if (currentTime != END_OF_DAY + 1) {
+          query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
+        }
+      }
+    }
+
+    // Sorting the query by ascending order.
+    query.sort(ORDER_BY_START);
+
+    //  Return the meetings.
+    return query;
+  }
 }

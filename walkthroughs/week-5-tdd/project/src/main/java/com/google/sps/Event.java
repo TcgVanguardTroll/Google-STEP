@@ -24,73 +24,73 @@ import java.util.Set;
  * busy. Events are considered read-only.
  */
 public final class Event {
-  private final String title;
-  private final TimeRange when;
-  private final Set<String> attendees = new HashSet<>();
+    private final String title;
+    private final TimeRange when;
+    private final Set<String> attendees = new HashSet<>();
 
-  /**
-   * Creates a new event.
-   *
-   * @param title The human-readable name for the event. Must be non-null.
-   * @param when The time when the event takes place. Must be non-null.
-   * @param attendees The collection of people attending the event. Must be non-null.
-   */
-  public Event(String title, TimeRange when, Collection<String> attendees) {
-    if (title == null) {
-      throw new IllegalArgumentException("title cannot be null");
+    /**
+     * Creates a new event.
+     *
+     * @param title     The human-readable name for the event. Must be non-null.
+     * @param when      The time when the event takes place. Must be non-null.
+     * @param attendees The collection of people attending the event. Must be non-null.
+     */
+    public Event(String title, TimeRange when, Collection<String> attendees) {
+        if (title == null) {
+            throw new IllegalArgumentException("title cannot be null");
+        }
+
+        if (when == null) {
+            throw new IllegalArgumentException("when cannot be null");
+        }
+
+        if (attendees == null) {
+            throw new IllegalArgumentException("attendees cannot be null. Use empty array instead.");
+        }
+
+        this.title = title;
+        this.when = when;
+        this.attendees.addAll(attendees);
     }
 
-    if (when == null) {
-      throw new IllegalArgumentException("when cannot be null");
+    private static boolean equals(Event a, Event b) {
+        // {@code attendees} must be a set for equals to work as expected. According to the {@code Set}
+        // interface documentation, equals will check for set-equality across all set implementations.
+        return a.title.equals(b.title) && a.when.equals(b.when) && a.attendees.equals(b.attendees);
     }
 
-    if (attendees == null) {
-      throw new IllegalArgumentException("attendees cannot be null. Use empty array instead.");
+    /**
+     * Returns the human-readable name for this event.
+     */
+    public String getTitle() {
+        return title;
     }
 
-    this.title = title;
-    this.when = when;
-    this.attendees.addAll(attendees);
-  }
+    /**
+     * Returns the {@code TimeRange} for when this event occurs.
+     */
+    public TimeRange getWhen() {
+        return when;
+    }
 
-  /**
-   * Returns the human-readable name for this event.
-   */
-  public String getTitle() {
-    return title;
-  }
+    /**
+     * Returns a read-only set of required attendees for this event.
+     */
+    public Set<String> getAttendees() {
+        // Return the attendees as an unmodifiable set so that the caller can't change our
+        // internal data.
+        return Collections.unmodifiableSet(attendees);
+    }
 
-  /**
-   * Returns the {@code TimeRange} for when this event occurs.
-   */
-  public TimeRange getWhen() {
-    return when;
-  }
+    @Override
+    public int hashCode() {
+        // For the hash code, just use the title. Most events "should" have different names and will
+        // mainly be used as a way to skip the costly {@code equals()} call.
+        return title.hashCode();
+    }
 
-  /**
-   * Returns a read-only set of required attendees for this event.
-   */
-  public Set<String> getAttendees() {
-    // Return the attendees as an unmodifiable set so that the caller can't change our
-    // internal data.
-    return Collections.unmodifiableSet(attendees);
-  }
-
-  @Override
-  public int hashCode() {
-    // For the hash code, just use the title. Most events "should" have different names and will
-    // mainly be used as a way to skip the costly {@code equals()} call.
-    return title.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    return other instanceof Event && equals(this, (Event) other);
-  }
-
-  private static boolean equals(Event a, Event b) {
-    // {@code attendees} must be a set for equals to work as expected. According to the {@code Set}
-    // interface documentation, equals will check for set-equality across all set implementations.
-    return a.title.equals(b.title) && a.when.equals(b.when) && a.attendees.equals(b.attendees);
-  }
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Event && equals(this, (Event) other);
+    }
 }

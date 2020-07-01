@@ -21,47 +21,47 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public final class MeetingRequest {
-  // All the people that should be attending this new meeting. Use a set to avoid duplicates.
-  private final Collection<String> attendees = new HashSet<>();
+    // All the people that should be attending this new meeting. Use a set to avoid duplicates.
+    private final Collection<String> attendees = new HashSet<>();
 
-  // Some optional attendees for this new meeting. Use a set to avoid duplicates.
-  private final Collection<String> optional_attendees = new HashSet<>();
+    // Some optional attendees for this new meeting. Use a set to avoid duplicates.
+    private final Collection<String> optional_attendees = new HashSet<>();
 
-  // The duration of the meeting in minutes.
-  private final long duration;
+    // The duration of the meeting in minutes.
+    private final long duration;
 
-  public MeetingRequest(Collection<String> attendees, long duration) {
-    this.duration = duration;
-    this.attendees.addAll(attendees);
-  }
-
-  /**
-   * Returns a read-only copy of the people who are required to attend this meeting.
-   */
-  public Collection<String> getAttendees() {
-    return Collections.unmodifiableCollection(attendees);
-  }
-
-  /**
-   * Returns a read-only copy of the people who are optional to attend this meeting.
-   */
-  public Collection<String> getOptionalAttendees() {
-    return Collections.unmodifiableCollection(optional_attendees);
-  }
-
-  /**
-   * Adds one optional attendee for the meeting.
-   */
-  public void addOptionalAttendee(String attendee) {
-    if (!attendees.contains(attendee)) {
-      optional_attendees.add(attendee);
+    public MeetingRequest(Collection<String> attendees, long duration) {
+        this.duration = duration;
+        this.attendees.addAll(attendees);
     }
-  }
 
-  /**
-   * Returns the duration of the meeting in minutes.
-   */
-  public long getDuration() {
-    return duration;
-  }
+    /**
+     * Returns a read-only copy of the people who are required to attend this meeting.
+     */
+    public Collection<String> getAttendees() {
+        return Collections.unmodifiableCollection(attendees);
+    }
+
+    /**
+     * Returns a read-only copy of the people who are optional to attend this meeting.
+     */
+    public Collection<String> getOptionalAttendees() {
+        return Collections.unmodifiableCollection(optional_attendees);
+    }
+
+    /**
+     * Adds one optional attendee for the meeting.
+     */
+    public void addOptionalAttendee(String attendee) {
+        if (!attendees.contains(attendee)) {
+            optional_attendees.add(attendee);
+        }
+    }
+
+    /**
+     * Returns the duration of the meeting in minutes.
+     */
+    public long getDuration() {
+        return duration;
+    }
 }
