@@ -75,7 +75,7 @@ public final class FindMeetingQuery {
       // Increment event idx by one
       eventCounter += 1;
 
-      // If the the only attendee someone different from the person looking to book a meeting.
+      // If the the only attendee is someone different than the person looking to book a meeting.
       if (Collections.disjoint(eventAttendees, requestAttendees)) {
         query.add(TimeRange.WHOLE_DAY);
         continue;
