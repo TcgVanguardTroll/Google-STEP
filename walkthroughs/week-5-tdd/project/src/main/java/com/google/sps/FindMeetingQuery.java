@@ -99,13 +99,13 @@ public final class FindMeetingQuery {
 
         //  If the start of the event is directly after another or at the start of the day,
         //  set up potential meeting range.
-        if (eventStart == currentTime) {
-        currentTime = eventEnd;
+        if (currentTime == eventStart) {
+            currentTime = eventEnd;
       }
 
       // Check for overlapping/nested events
-      if (eventStart < currentTime) {
-        if (eventEnd > currentTime) {
+      if (currentTime > eventStart) {
+        if (currentTime < eventEnd) {
           currentTime = eventEnd;
         }
       }
@@ -113,7 +113,7 @@ public final class FindMeetingQuery {
       // If at the last event and there is still time in the day.
       if (eventCounter == numberOfEvents) {
         if (currentTime <= END_OF_DAY) {
-          query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
+            query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
         }
       }
     }
