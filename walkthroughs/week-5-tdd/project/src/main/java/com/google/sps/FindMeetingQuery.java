@@ -86,21 +86,21 @@ public final class FindMeetingQuery {
       // Fetch event end time.
       eventEnd = event.getWhen().end();
 
-
       // If there is time before the meeting starts.
       if (currentTime < eventStart) {
-        //   and there is enoguh time to validate this meeting
+        //   and there is enough time to validate this meeting
         if (eventStart - currentTime >= desiredDuration) {
-            // add it to the query and update time.
+          // add it to the query and update time.
           query.add(TimeRange.fromStartEnd(currentTime, eventStart, /* inclusive= */ false));
-          currentTime = eventEnd;
-        } else /* else  update time */ currentTime = eventEnd;
+        }
+        // Update time.
+        currentTime = eventEnd;
       }
 
-        //  If the start of the event is directly after another or at the start of the day,
-        //  set up potential meeting range.
-        if (currentTime == eventStart) {
-            currentTime = eventEnd;
+      //  If the start of the event is directly after another or at the start of the day,
+      //  set up potential meeting range.
+      if (currentTime == eventStart) {
+        currentTime = eventEnd;
       }
 
       // Check for overlapping/nested events
@@ -113,7 +113,7 @@ public final class FindMeetingQuery {
       // If at the last event and there is still time in the day.
       if (eventCounter == numberOfEvents) {
         if (currentTime <= END_OF_DAY) {
-            query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
+          query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
         }
       }
     }
