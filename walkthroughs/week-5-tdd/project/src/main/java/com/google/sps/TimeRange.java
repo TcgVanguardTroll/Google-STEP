@@ -46,8 +46,8 @@ public final class TimeRange {
     }
   };
 
-  public final int start;
-  public final int duration;
+  private final int start;
+  private final int duration;
 
   private TimeRange(int start, int duration) {
     this.start = start;
