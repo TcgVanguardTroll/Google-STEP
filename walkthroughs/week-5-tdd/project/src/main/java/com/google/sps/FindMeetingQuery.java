@@ -14,10 +14,83 @@
 
 package com.google.sps;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 public final class FindMeetingQuery {
+
+  private static final int START_OF_DAY = TimeRange.START_OF_DAY;
+  private static final int END_OF_DAY = TimeRange.END_OF_DAY;
+  private static final TimeRange WHOLE_DAY = TimeRange.WHOLE_DAY;
+  private static final Comparator<TimeRange> ORDER_BY_START = TimeRange.ORDER_BY_START;
+
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
+
+    // Array of queries representing times to meet.
+    List<TimeRange> query = new ArrayList<>();
+
+    int desiredDuration = (int) request.getDuration();
+
+    // Collection of string representing who is to attend the requested meeting.
+    Collection<String> requestAttendees = request.getAttendees();
+
+    // Check if duration of event is longer than a whole day and if so return empty.
+    if ((int) request.getDuration() > WHOLE_DAY.duration()) {
+      return query;
+    }
+
+    // Check if there are any events happening at all if so return whole day query.
+    if (events.size() == 0) {
+      query.add(TimeRange.WHOLE_DAY);
+      return query;
+    }
+
+    // Copy of events used for iterating and sorting.
+    List<Event> eventsCopy = new ArrayList<>(events);
+
+    // Sorts the even in chronological order.
+    eventsCopy.sort((e1, e2) -> ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
+
+    int nextTime = START_OF_DAY;
+
+    // Iterating through input event collection.
+    for (Event event : eventsCopy) {
+      int currentTime = nextTime;
+
+      // Collection of the people who are required to attend meeting.
+      Set<String> eventAttendees = event.getAttendees();
+
+      // If the none of the attenddess are required attendees skip this event
+      if (Collections.disjoint(eventAttendees, requestAttendees)) {
+        continue;
+      }
+
+      // Fetch event start time.
+      int eventStart = event.getWhen().start();
+      // Fetch event end time.
+      int eventEnd = event.getWhen().end();
+
+      // If this is a valid time range then add it to query .
+      if (currentTime <= eventStart) {
+        if (eventStart - currentTime >= desiredDuration) {
+          query.add(TimeRange.fromStartEnd(currentTime, eventStart, /* inclusive= */ false));
+        }
+        nextTime = eventEnd;
+      }
+
+      // Check for overlapping/nested events
+      if (currentTime > eventStart && currentTime < eventEnd) {
+        nextTime = eventEnd;
+      }
+    }
+    // If at the last event and there is still time in the day.
+    if (nextTime < END_OF_DAY) {
+      query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
+    }
+    return query;
   }
 }
