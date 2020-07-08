@@ -52,8 +52,6 @@ public final class FindMeetingQuery {
       query.add(TimeRange.WHOLE_DAY);
       return query;
     }
-    //  Event counter used whilst iterating.
-    int eventCounter = 0;
 
     // Sorts the even in chronological order.
     eventsCopy.sort((e1, e2) -> ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
@@ -69,12 +67,8 @@ public final class FindMeetingQuery {
       // Collection of the people who are required to attend meeting.
       Set<String> eventAttendees = event.getAttendees();
 
-      // Increment event counter by one
-      eventCounter += 1;
-
       // If the the only attendee is someone different than the person looking to book a meeting.
       if (Collections.disjoint(eventAttendees, requestAttendees)) {
-        query.add(TimeRange.WHOLE_DAY);
         continue;
       }
 
@@ -92,14 +86,13 @@ public final class FindMeetingQuery {
       }
 
       // Check for overlapping/nested events
-      if ((currentTime > eventStart) && (currentTime < eventEnd)) {
+      if (currentTime > eventStart && currentTime < eventEnd) {
         nextTime = eventEnd;
       }
-
-      // If at the last event and there is still time in the day.
-      if ((eventCounter == events.size()) &&  (nextTime <= END_OF_DAY)) {
-        query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
-      }
+    }
+    // If at the last event and there is still time in the day.
+    if (nextTime <= END_OF_DAY) {
+      query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
     }
     return query;
   }
