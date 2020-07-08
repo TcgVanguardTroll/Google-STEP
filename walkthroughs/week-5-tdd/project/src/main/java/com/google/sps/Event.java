@@ -53,23 +53,23 @@ public final class Event {
     this.attendees.addAll(attendees);
   }
 
-  private static boolean equals(Event a, Event b) {
-    // {@code attendees} must be a set for equals to work as expected. According to the {@code Set}
-    // interface documentation, equals will check for set-equality across all set implementations.
-    return a.title.equals(b.title) && a.when.equals(b.when) && a.attendees.equals(b.attendees);
-  }
-
-  /** Returns the human-readable name for this event. */
+  /**
+   * Returns the human-readable name for this event.
+   */
   public String getTitle() {
     return title;
   }
 
-  /** Returns the {@code TimeRange} for when this event occurs. */
+  /**
+   * Returns the {@code TimeRange} for when this event occurs.
+   */
   public TimeRange getWhen() {
     return when;
   }
 
-  /** Returns a read-only set of required attendees for this event. */
+  /**
+   * Returns a read-only set of required attendees for this event.
+   */
   public Set<String> getAttendees() {
     // Return the attendees as an unmodifiable set so that the caller can't change our
     // internal data.
@@ -86,5 +86,11 @@ public final class Event {
   @Override
   public boolean equals(Object other) {
     return other instanceof Event && equals(this, (Event) other);
+  }
+
+  private static boolean equals(Event a, Event b) {
+    // {@code attendees} must be a set for equals to work as expected. According to the {@code Set}
+    // interface documentation, equals will check for set-equality across all set implementations.
+    return a.title.equals(b.title) && a.when.equals(b.when) && a.attendees.equals(b.attendees);
   }
 }

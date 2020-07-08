@@ -26,23 +26,25 @@ public final class TimeRange {
 
   public static final TimeRange WHOLE_DAY = new TimeRange(0, 24 * 60);
 
-  /** A comparator for sorting ranges by their start time in ascending order. */
-  public static final Comparator<TimeRange> ORDER_BY_START =
-      new Comparator<TimeRange>() {
-        @Override
-        public int compare(TimeRange a, TimeRange b) {
-          return Long.compare(a.start, b.start);
-        }
-      };
+  /**
+   * A comparator for sorting ranges by their start time in ascending order.
+   */
+  public static final Comparator<TimeRange> ORDER_BY_START = new Comparator<TimeRange>() {
+    @Override
+    public int compare(TimeRange a, TimeRange b) {
+      return Long.compare(a.start, b.start);
+    }
+  };
 
-  /** A comparator for sorting ranges by their end time in ascending order. */
-  public static final Comparator<TimeRange> ORDER_BY_END =
-      new Comparator<TimeRange>() {
-        @Override
-        public int compare(TimeRange a, TimeRange b) {
-          return Long.compare(a.end(), b.end());
-        }
-      };
+  /**
+   * A comparator for sorting ranges by their end time in ascending order.
+   */
+  public static final Comparator<TimeRange> ORDER_BY_END = new Comparator<TimeRange>() {
+    @Override
+    public int compare(TimeRange a, TimeRange b) {
+      return Long.compare(a.end(), b.end());
+    }
+  };
 
   private final int start;
   private final int duration;
@@ -52,66 +54,23 @@ public final class TimeRange {
     this.duration = duration;
   }
 
-  private static boolean contains(TimeRange range, int point) {
-    // If a range has no duration, it cannot contain anything.
-    if (range.duration <= 0) {
-      return false;
-    }
-
-    // If the point comes before the start of the range, the range cannot contain it.
-    if (point < range.start) {
-      return false;
-    }
-
-    // If the point is on the end of the range. We don't count it as included in the range. For
-    // example, if we have a range that starts at 8:00 and is 30 minutes long, it would end at 8:30.
-    // But that range should on contain 8:30 because it would end just before 8:30 began.
-    return point < range.start + range.duration;
-  }
-
-  private static boolean equals(TimeRange a, TimeRange b) {
-    return a.start == b.start && a.duration == b.duration;
-  }
-
-  public static int getTimeInMinutes(int hours, int minutes) {
-    if (hours < 0 || hours >= 24) {
-      throw new IllegalArgumentException("Hours can only be 0 through 23 (inclusive).");
-    }
-
-    if (minutes < 0 || minutes >= 60) {
-      throw new IllegalArgumentException("Minutes can only be 0 through 59 (inclusive).");
-    }
-
-    return (hours * 60) + minutes;
-  }
-
   /**
-   * Creates a {@code TimeRange} from {@code start} to {@code end}. Whether or not {@code end} is
-   * included in the range will depend on {@code inclusive}. If {@code inclusive} is {@code true},
-   * then @{code end} will be in the range.
+   * Returns the start of the range in minutes.
    */
-  public static TimeRange fromStartEnd(int start, int end, boolean inclusive) {
-    return inclusive ? new TimeRange(start, end - start + 1) : new TimeRange(start, end - start);
-  }
-
-  /**
-   * Create a {@code TimeRange} starting at {@code start} with a duration equal to {@code duration}.
-   */
-  public static TimeRange fromStartDuration(int start, int duration) {
-    return new TimeRange(start, duration);
-  }
-
-  /** Returns the start of the range in minutes. */
   public int start() {
     return start;
   }
 
-  /** Returns the number of minutes between the start and end. */
+  /**
+   * Returns the number of minutes between the start and end.
+   */
   public int duration() {
     return duration;
   }
 
-  /** Returns the end of the range. This ending value is the closing exclusive bound. */
+  /**
+   * Returns the end of the range. This ending value is the closing exclusive bound.
+   */
   public int end() {
     return start + duration;
   }
@@ -174,5 +133,54 @@ public final class TimeRange {
   @Override
   public String toString() {
     return String.format("Range: [%d, %d)", start, start + duration);
+  }
+
+  private static boolean contains(TimeRange range, int point) {
+    // If a range has no duration, it cannot contain anything.
+    if (range.duration <= 0) {
+      return false;
+    }
+
+    // If the point comes before the start of the range, the range cannot contain it.
+    if (point < range.start) {
+      return false;
+    }
+
+    // If the point is on the end of the range. We don't count it as included in the range. For
+    // example, if we have a range that starts at 8:00 and is 30 minutes long, it would end at 8:30.
+    // But that range should on contain 8:30 because it would end just before 8:30 began.
+    return point < range.start + range.duration;
+  }
+
+  private static boolean equals(TimeRange a, TimeRange b) {
+    return a.start == b.start && a.duration == b.duration;
+  }
+
+  public static int getTimeInMinutes(int hours, int minutes) {
+    if (hours < 0 || hours >= 24) {
+      throw new IllegalArgumentException("Hours can only be 0 through 23 (inclusive).");
+    }
+
+    if (minutes < 0 || minutes >= 60) {
+      throw new IllegalArgumentException("Minutes can only be 0 through 59 (inclusive).");
+    }
+
+    return (hours * 60) + minutes;
+  }
+
+  /**
+   * Creates a {@code TimeRange} from {@code start} to {@code end}. Whether or not {@code end} is
+   * included in the range will depend on {@code inclusive}. If {@code inclusive} is {@code true},
+   * then @{code end} will be in the range.
+   */
+  public static TimeRange fromStartEnd(int start, int end, boolean inclusive) {
+    return inclusive ? new TimeRange(start, end - start + 1) : new TimeRange(start, end - start);
+  }
+
+  /**
+   * Create a {@code TimeRange} starting at {@code start} with a duration equal to {@code duration}.
+   */
+  public static TimeRange fromStartDuration(int start, int duration) {
+    return new TimeRange(start, duration);
   }
 }
