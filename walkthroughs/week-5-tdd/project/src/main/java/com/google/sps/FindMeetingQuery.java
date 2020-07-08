@@ -33,9 +33,6 @@ public final class FindMeetingQuery {
     // Array of queries representing times to meet.
     List<TimeRange> query = new ArrayList<>();
 
-    // Copy of events used for iterating and sorting.
-    List<Event> eventsCopy = new ArrayList<>(events);
-
     int desiredDuration = (int) request.getDuration();
 
     // Collection of string representing who is to attend the requested meeting.
@@ -48,26 +45,26 @@ public final class FindMeetingQuery {
 
     // Check if there are any events happening at all if so return whole day query.
     if (events.size() == 0) {
-      // Adds a 24 hour time range to query.
       query.add(TimeRange.WHOLE_DAY);
       return query;
     }
 
+    // Copy of events used for iterating and sorting.
+    List<Event> eventsCopy = new ArrayList<>(events);
+
     // Sorts the even in chronological order.
     eventsCopy.sort((e1, e2) -> ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
-
-    int currentTime = START_OF_DAY;
 
     int nextTime = START_OF_DAY;
 
     // Iterating through input event collection.
     for (Event event : eventsCopy) {
-      currentTime = nextTime;
+      int currentTime = nextTime;
 
       // Collection of the people who are required to attend meeting.
       Set<String> eventAttendees = event.getAttendees();
 
-      // If the the only attendee is someone different than the person looking to book a meeting.
+      // If the none of the attenddess are required attendees skip this event
       if (Collections.disjoint(eventAttendees, requestAttendees)) {
         continue;
       }
@@ -91,7 +88,7 @@ public final class FindMeetingQuery {
       }
     }
     // If at the last event and there is still time in the day.
-    if (nextTime <= END_OF_DAY) {
+    if (nextTime < END_OF_DAY) {
       query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
     }
     return query;
