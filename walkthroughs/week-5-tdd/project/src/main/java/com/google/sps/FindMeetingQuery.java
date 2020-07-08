@@ -30,17 +30,11 @@ public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
-    /* Array of queries representing times to meet. */
+    // Array of queries representing times to meet.
     List<TimeRange> query = new ArrayList<>();
 
     // Copy of events used for iterating and sorting.
     List<Event> eventsCopy = new ArrayList<>(events);
-
-    int numberOfEvents = events.size();
-
-    int currentTime = START_OF_DAY;
-
-    int nextTime = START_OF_DAY;
 
     int desiredDuration = (int) request.getDuration();
 
@@ -53,7 +47,7 @@ public final class FindMeetingQuery {
     }
 
     // Check if there are any events happening at all if so return whole day query.
-    if (numberOfEvents == 0) {
+    if (events.size() == 0) {
       // Adds a 24 hour time range to query.
       query.add(TimeRange.WHOLE_DAY);
       return query;
@@ -64,6 +58,10 @@ public final class FindMeetingQuery {
     // Sorts the even in chronological order.
     eventsCopy.sort((e1, e2) -> ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
 
+    int currentTime = START_OF_DAY;
+
+    int nextTime = START_OF_DAY;
+
     // Iterating through input event collection.
     for (Event event : eventsCopy) {
       currentTime = nextTime;
@@ -71,7 +69,7 @@ public final class FindMeetingQuery {
       // Collection of the people who are required to attend meeting.
       Set<String> eventAttendees = event.getAttendees();
 
-      // Increment event idx by one
+      // Increment event counter by one
       eventCounter += 1;
 
       // If the the only attendee is someone different than the person looking to book a meeting.
@@ -85,29 +83,24 @@ public final class FindMeetingQuery {
       // Fetch event end time.
       int eventEnd = event.getWhen().end();
 
-      // If there is time before the meeting starts.
+      // If this is a valid time range then add it to query .
       if (currentTime <= eventStart) {
-        //   and there is enough time to validate this meeting
         if (eventStart - currentTime >= desiredDuration) {
-          // add it to the query and update time.
           query.add(TimeRange.fromStartEnd(currentTime, eventStart, /* inclusive= */ false));
         }
-        // Storing value of next time
         nextTime = eventEnd;
       }
 
       // Check for overlapping/nested events
-      if ((currentTime > eventStart) && (currentTime < eventEnd)) nextTime = eventEnd;
+      if ((currentTime > eventStart) && (currentTime < eventEnd)) {
+        nextTime = eventEnd;
+      }
 
       // If at the last event and there is still time in the day.
-      if (eventCounter == numberOfEvents) {
-        if (nextTime <= END_OF_DAY) {
-          query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
-        }
+      if ((eventCounter == events.size()) &&  (nextTime <= END_OF_DAY)) {
+        query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
       }
     }
-
-    //  Return the meetings.
     return query;
   }
 }
