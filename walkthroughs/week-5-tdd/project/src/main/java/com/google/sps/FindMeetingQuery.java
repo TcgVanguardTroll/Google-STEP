@@ -40,6 +40,8 @@ public final class FindMeetingQuery {
 
     int currentTime = START_OF_DAY;
 
+    int nextTime = START_OF_DAY;
+
     int desiredDuration = (int) request.getDuration();
 
     // Collection of string representing who is to attend the requested meeting.
@@ -59,15 +61,12 @@ public final class FindMeetingQuery {
     //  Event counter used whilst iterating.
     int eventCounter = 0;
 
-    int eventStart;
-
-    int eventEnd;
-
     // Sorts the even in chronological order.
     eventsCopy.sort((e1, e2) -> ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
 
     // Iterating through input event collection.
     for (Event event : eventsCopy) {
+      currentTime = nextTime;
 
       // Collection of the people who are required to attend meeting.
       Set<String> eventAttendees = event.getAttendees();
@@ -82,43 +81,31 @@ public final class FindMeetingQuery {
       }
 
       // Fetch event start time.
-      eventStart = event.getWhen().start();
+      int eventStart = event.getWhen().start();
       // Fetch event end time.
-      eventEnd = event.getWhen().end();
+      int eventEnd = event.getWhen().end();
 
       // If there is time before the meeting starts.
-      if (currentTime < eventStart) {
+      if (currentTime <= eventStart) {
         //   and there is enough time to validate this meeting
         if (eventStart - currentTime >= desiredDuration) {
           // add it to the query and update time.
           query.add(TimeRange.fromStartEnd(currentTime, eventStart, /* inclusive= */ false));
         }
-        // Update time.
-        currentTime = eventEnd;
-      }
-
-      //  If the start of the event is directly after another or at the start of the day,
-      //  set up potential meeting range.
-      if (currentTime == eventStart) {
-        currentTime = eventEnd;
+        // Storing value of next time
+        nextTime = eventEnd;
       }
 
       // Check for overlapping/nested events
-      if (currentTime > eventStart) {
-        if (currentTime < eventEnd) {
-          currentTime = eventEnd;
-        }
-      }
+      if ((currentTime > eventStart) && (currentTime < eventEnd)) nextTime = eventEnd;
 
       // If at the last event and there is still time in the day.
       if (eventCounter == numberOfEvents) {
-        if (currentTime <= END_OF_DAY) {
-          query.add(TimeRange.fromStartEnd(currentTime, END_OF_DAY, /* inclusive= */ true));
+        if (nextTime <= END_OF_DAY) {
+          query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
         }
       }
     }
-    // Sorting the query by ascending order.
-    query.sort(ORDER_BY_START);
 
     //  Return the meetings.
     return query;
