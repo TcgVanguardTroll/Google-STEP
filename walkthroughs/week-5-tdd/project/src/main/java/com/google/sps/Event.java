@@ -54,13 +54,6 @@ public final class Event {
   }
 
   /**
-   * Returns the human-readable name for this event.
-   */
-  public String getTitle() {
-    return title;
-  }
-
-  /**
    * Returns the {@code TimeRange} for when this event occurs.
    */
   public TimeRange getWhen() {
