@@ -51,10 +51,15 @@ public final class FindMeetingQuery {
     // Array of queries representing times to meet.
     List<TimeRange> mandatoryTimeRanges;
 
+    int desiredDuration = (int) request.getDuration();
+
     // Array of queries representing times to meet.
     List<TimeRange> allTimeRanges;
 
-    int desiredDuration = (int) request.getDuration();
+    // Check if duration of event is longer than a whole day and if so return empty.
+    if ((int) request.getDuration() > WHOLE_DAY.duration()) {
+      return Collections.emptyList();
+    }
 
     // Collection of string representing who is to attend the requested meeting.
     Collection<String> mandatoryAttendees = new ArrayList<>(request.getAttendees());
@@ -62,40 +67,34 @@ public final class FindMeetingQuery {
     // Collection of strings representing who are optional to the meeting.
     Collection<String> optionalAttendees = new ArrayList<>(request.getOptionalAttendees());
 
+    // If there are no mandatory attendees , return lists of the optional attendees time ranges.
+    if (mandatoryAttendees.isEmpty()) {
+      optionalTimeRanges = populateTimeRanges(events, optionalAttendees, desiredDuration);
+      return optionalTimeRanges;    }
+
+    // If there are no optional attendees , return lists of the mandatory attendees time ranges.
+    if (optionalAttendees.isEmpty()) {
+      mandatoryTimeRanges = populateTimeRanges(events, mandatoryAttendees, desiredDuration);
+      return mandatoryTimeRanges;    }
+
     // Collection of Strings representing all attendees ( Mandatory and Optional )
     Collection<String> allAttendees =
         combineMandatoryAndOptional(mandatoryAttendees, optionalAttendees);
 
-    // Check if duration of event is longer than a whole day and if so return empty.
-    if ((int) request.getDuration() > WHOLE_DAY.duration()) {
-      return Collections.emptyList();
-    }
-
-    // If there are no mandatory attendees , return lists of the optional attendees time ranges.
-    if (mandatoryAttendees.isEmpty()) {
-        return getTimeRanges(events, optionalAttendees, desiredDuration);
-    }
-
-    // If there are no optional attendees , return lists of the mandatory attendees time ranges.
-    if (optionalAttendees.isEmpty()) {
-        return getTimeRanges(events, mandatoryAttendees, desiredDuration);
-    }
-
     allTimeRanges =
-        (ArrayList<TimeRange>) getTimeRanges(events, allAttendees, desiredDuration);
+        (ArrayList<TimeRange>) findAvailableTimeRangesForAttendees(events, allAttendees, desiredDuration);
     if (allTimeRanges.isEmpty()) {
-        return getTimeRanges(events, mandatoryAttendees, desiredDuration);
+      mandatoryTimeRanges = populateTimeRanges(events, mandatoryAttendees, desiredDuration);
+      return mandatoryTimeRanges;
     }
     return allTimeRanges;
   }
 
- public List<TimeRange> getTimeRanges(
+ public List<TimeRange> findAvailableTimeRangesForAttendees(
       Collection<Event> events, Collection<String> attendees, int desiredDuration) {
 
     // Array of queries representing times to meet.
     List<TimeRange> timeRanges = new ArrayList<>();
-
-    int nextTime = START_OF_DAY;
 
     // Copy of events used for iterating and sorting.
     List<Event> eventsCopy = new ArrayList<>(events);
@@ -108,6 +107,8 @@ public final class FindMeetingQuery {
       timeRanges.add(TimeRange.WHOLE_DAY);
       return timeRanges;
     }
+
+    int nextTime = START_OF_DAY;
 
     // Iterating through input event collection.
     for (Event event : eventsCopy) {
@@ -158,6 +159,6 @@ public final class FindMeetingQuery {
   }
   public List<TimeRange> populateTimeRanges(
       Collection<com.google.sps.Event> events, Collection<String> attendees, int desiredDuration) {
-    return getTimeRanges(events, attendees, desiredDuration);
+    return findAvailableTimeRangesForAttendees(events, attendees, desiredDuration);
   }
 }
