@@ -247,9 +247,9 @@ public final class FindMeetingQueryTest {
     MeetingRequest request =
         new MeetingRequest(Collections.singletonList(PERSON_A), DURATION_30_MINUTES);
 
-    Collection<com.google.sps.TimeRange> actual = query.query(events, request);
-    Collection<com.google.sps.TimeRange> expected =
-        Arrays.asList(com.google.sps.TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected =
+        Arrays.asList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
 
     Assert.assertEquals(expected, actual);
   }
@@ -258,11 +258,11 @@ public final class FindMeetingQueryTest {
   public void ignoresPeopleNotAttending() {
     // Add an event, but make the only attendee someone different from the person looking to book
     // a meeting. This event should not affect the booking.
-    Collection<com.google.sps.Event> events =
+    Collection<Event> events =
         Arrays.asList(
-            new com.google.sps.Event(
+            new Event(
                 "Event 1",
-                com.google.sps.TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
+                TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
                 Collections.singletonList(PERSON_A)));
     MeetingRequest request =
         new MeetingRequest(Collections.singletonList(PERSON_B), DURATION_30_MINUTES);
@@ -319,7 +319,7 @@ public final class FindMeetingQueryTest {
 
     String testPerson = "Person Jordan";
 
-    Collection<com.google.sps.Event> events =
+    Collection<Event> events =
         Arrays.asList(
             new Event(
                 "Event 1",
@@ -337,9 +337,9 @@ public final class FindMeetingQueryTest {
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
         Arrays.asList(
-            com.google.sps.TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
-            com.google.sps.TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
-            com.google.sps.TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
+            TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
+            TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
+            TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
 
     Assert.assertEquals(expected, actual);
   }
@@ -369,9 +369,9 @@ public final class FindMeetingQueryTest {
         new MeetingRequest(Collections.singletonList(PERSON_A), DURATION_30_MINUTES);
     request.addOptionalAttendee(testPerson);
 
-    Collection<com.google.sps.TimeRange> actual = query.query(events, request);
-    Collection<com.google.sps.TimeRange> expected =
-        Arrays.asList(com.google.sps.TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected =
+        Arrays.asList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
     Assert.assertEquals(expected, actual);
   }
 
@@ -392,9 +392,9 @@ public final class FindMeetingQueryTest {
     request.addOptionalAttendee(PERSON_A);
     request.addOptionalAttendee(PERSON_B);
 
-    Collection<com.google.sps.TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> actual = query.query(events, request);
 
-    Collection<com.google.sps.TimeRange> expected = Collections.emptyList();
+    Collection<TimeRange> expected = Collections.emptyList();
     Assert.assertEquals(expected, actual);
   }
 
@@ -432,9 +432,9 @@ public final class FindMeetingQueryTest {
     request.addOptionalAttendee(PERSON_A);
     request.addOptionalAttendee(PERSON_B);
 
-    Collection<com.google.sps.TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> actual = query.query(events, request);
 
-    Collection<com.google.sps.TimeRange> expected =
+    Collection<TimeRange> expected =
         Arrays.asList(
             TimeRange.fromStartEnd(
                 TimeRange.getTimeInMinutes(9, 30), TimeRange.getTimeInMinutes(10, 0), false),
