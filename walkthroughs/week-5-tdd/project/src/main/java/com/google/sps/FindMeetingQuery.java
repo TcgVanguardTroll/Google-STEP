@@ -45,16 +45,7 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(
       Collection<Event> events, MeetingRequest request) {
 
-    // Array of queries representing times to meet.
-    List<TimeRange> optionalTimeRanges;
-
-    // Array of queries representing times to meet.
-    List<TimeRange> mandatoryTimeRanges;
-
     int desiredDuration = (int) request.getDuration();
-
-    // Array of queries representing times to meet.
-    List<TimeRange> allTimeRanges;
 
     // Check if duration of event is longer than a whole day and if so return empty.
     if ((int) request.getDuration() > WHOLE_DAY.duration()) {
@@ -69,20 +60,24 @@ public final class FindMeetingQuery {
 
     // If there are no mandatory attendees , return lists of the optional attendees time ranges.
     if (mandatoryAttendees.isEmpty()) {
-      optionalTimeRanges = populateTimeRanges(events, optionalAttendees, desiredDuration);
-      return optionalTimeRanges;    }
+        List<TimeRange> optionalTimeRanges = populateTimeRanges(events, optionalAttendees, desiredDuration);
+        return optionalTimeRanges;   
+    }
 
     // If there are no optional attendees , return lists of the mandatory attendees time ranges.
     if (optionalAttendees.isEmpty()) {
-      mandatoryTimeRanges = populateTimeRanges(events, mandatoryAttendees, desiredDuration);
-      return mandatoryTimeRanges;    }
+      List<TimeRange> mandatoryTimeRanges = populateTimeRanges(events, mandatoryAttendees, desiredDuration);
+      return mandatoryTimeRanges;   
+       }
 
     // Collection of Strings representing all attendees ( Mandatory and Optional )
     Collection<String> allAttendees =
         combineMandatoryAndOptional(mandatoryAttendees, optionalAttendees);
 
-    allTimeRanges =
-        (ArrayList<TimeRange>) findAvailableTimeRangesForAttendees(events, allAttendees, desiredDuration);
+    // List of queries representing times to meet.
+    List<TimeRange> allTimeRanges;
+
+    allTimeRanges = findAvailableTimeRangesForAttendees(events, allAttendees, desiredDuration);
     if (allTimeRanges.isEmpty()) {
       mandatoryTimeRanges = populateTimeRanges(events, mandatoryAttendees, desiredDuration);
       return mandatoryTimeRanges;
@@ -157,6 +152,7 @@ public final class FindMeetingQuery {
     allAttendees.addAll(mandatoryAttendees);
     return allAttendees;
   }
+
   public List<TimeRange> populateTimeRanges(
       Collection<Event> events, Collection<String> attendees, int desiredDuration) {
     return findAvailableTimeRangesForAttendees(events, attendees, desiredDuration);
