@@ -313,8 +313,16 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void optionalAttendeeConsidered() {
+
     // Add an optional attendee C who has an all-day event. The same three time slots should be
     // returned as when C was not invited.
+    // Person C is an optional attendee that has an all-day event.
+    // Should return same 3 options as everyAttendeeIsConsidered
+    //
+    // Events  :       |--A--|     |--B--|
+    // Events  : |--------------C--------------|
+    // Day     : |-----------------------------|
+    // Options : |--1--|     |--2--|     |--3--|
 
     String testPerson = "Person Jordan";
 
@@ -347,6 +355,15 @@ public final class FindMeetingQueryTest {
   @Test
   public void optionalJustEnoughRoom() {
 
+    // Have one mandatory and one optional attendee, but make it so that 
+    // the optional attendee is ignored, since it would result in smaller
+    // time slot
+    //
+    // Events  : |--A--|     |----A----|
+    // Events  :          |Nadroj|
+    // Day     : |---------------------|
+    // Options :       |-----|
+
     String testPerson = "Person Nadroj";
 
     Collection<Event> events =
@@ -376,6 +393,15 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void noMandatoryAttendeesNoGaps() {
+
+    // Two optional attendees with the no gaps in their schedules
+    // Should return no times
+    //
+    // Events  : |--A--||------A-------| 
+    // Events  : |---------B-----------|
+    // Day     : |---------------------|
+    // Options : 
+
     Collection<Event> events =
         Arrays.asList(
             new Event(
@@ -399,6 +425,17 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void noMandatoryAttendeesGaps() {
+
+    // Two optional attendees with the following gaps in their schedules
+    // Should return time slots that both attendees can attend
+    //
+    // Events  :      |--A--| 
+    // Events  :            |-B-|  |-B-|
+    // Day     : |---------------------|
+    // Options : |----|     
+    // Options :                |--|
+
+      
     Collection<Event> events =
         Arrays.asList(
             new Event(
