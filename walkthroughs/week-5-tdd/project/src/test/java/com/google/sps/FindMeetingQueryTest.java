@@ -437,6 +437,7 @@ public final class FindMeetingQueryTest {
     // Options :                |---|
     // Options :                                  |-|
 
+      
     Collection<Event> events =
         Arrays.asList(
             new Event(
@@ -444,17 +445,9 @@ public final class FindMeetingQueryTest {
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0930AM, false),
                 Collections.singletonList(PERSON_A)),
             new Event(
-                "Event 1.5",
-                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(9, 0), 30),
-                Collections.singletonList(PERSON_B)),
-            new Event(
                 "Event 2",
                 TimeRange.fromStartDuration(TIME_1000AM, 30),
                 Collections.singletonList(PERSON_A)),
-            new Event(
-                "Event 5",
-                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(14, 0), 120),
-                Collections.singletonList(PERSON_B)),
             new Event(
                 "Event 3",
                 TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(16, 0), 30),
@@ -463,7 +456,15 @@ public final class FindMeetingQueryTest {
                 "Event 4",
                 TimeRange.fromStartEnd(
                     TimeRange.getTimeInMinutes(17, 0), TimeRange.END_OF_DAY, true),
-                Collections.singletonList(PERSON_A)));
+                Collections.singletonList(PERSON_A)),
+            new Event(
+                "Event 1.5",
+                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(9, 0), 30),
+                Collections.singletonList(PERSON_B)),
+            new Event(
+                "Event 5",
+                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(14, 0), 120),
+                Collections.singletonList(PERSON_B)));
 
     MeetingRequest request = new MeetingRequest(Collections.emptyList(), DURATION_30_MINUTES);
     request.addOptionalAttendee(PERSON_A);
@@ -478,7 +479,7 @@ public final class FindMeetingQueryTest {
             TimeRange.fromStartEnd(
                 TimeRange.getTimeInMinutes(10, 30), TimeRange.getTimeInMinutes(14, 0), false),
             TimeRange.fromStartEnd(
-                TimeRange.getTimeInMinutes(16, 30), TimeRange.getTimeInMinutes(17, 0), true));
+                TimeRange.getTimeInMinutes(16, 30), TimeRange.getTimeInMinutes(17, 0), false));
     Assert.assertEquals(expected, actual);
   }
 }
