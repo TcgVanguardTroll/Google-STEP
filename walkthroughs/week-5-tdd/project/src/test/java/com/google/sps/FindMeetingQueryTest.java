@@ -313,7 +313,6 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void optionalAttendeeConsidered() {
-
     // Add an optional attendee C who has an all-day event. The same three time slots should be
     // returned as when C was not invited.
 
