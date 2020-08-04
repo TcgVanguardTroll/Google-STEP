@@ -316,15 +316,16 @@ public final class FindMeetingQueryTest {
 
     // Add an optional attendee C who has an all-day event. The same three time slots should be
     // returned as when C was not invited.
+
     // Person C is an optional attendee that has an all-day event.
     // Should return same 3 options as everyAttendeeIsConsidered
     //
     // Events  :       |--A--|     |--B--|
-    // Events  : |--------------C--------------|
+    // Events  : |--------------J--------------|
     // Day     : |-----------------------------|
     // Options : |--1--|     |--2--|     |--3--|
 
-    String testPerson = "Person Jordan";
+    String PERSON_J = "Person Jordan";
 
     Collection<Event> events =
         Arrays.asList(
@@ -336,10 +337,10 @@ public final class FindMeetingQueryTest {
                 "Event 2",
                 TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
                 Collections.singletonList(PERSON_B)),
-            new Event("Event 3", TimeRange.WHOLE_DAY, Collections.singletonList(testPerson)));
+            new Event("Event 3", TimeRange.WHOLE_DAY, Collections.singletonList(PERSON_J)));
 
     MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
-    request.addOptionalAttendee(testPerson);
+    request.addOptionalAttendee(PERSON_J);
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
@@ -355,23 +356,23 @@ public final class FindMeetingQueryTest {
   @Test
   public void optionalJustEnoughRoom() {
 
-    // Have one mandatory and one optional attendee, but make it so that 
+    // Have one mandatory and one optional attendee, but make it so that
     // the optional attendee is ignored, since it would result in smaller
     // time slot
     //
     // Events  : |--A--|     |----A----|
-    // Events  :          |Nadroj|
+    // Events  :        |-N-|
     // Day     : |---------------------|
     // Options :       |-----|
 
-    String testPerson = "Person Nadroj";
+    String PERSON_N = "Person Nadroj";
 
     Collection<Event> events =
         Arrays.asList(
             new Event(
                 "Event 1",
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
-                Arrays.asList(PERSON_A)),
+                    Collections.singletonList(PERSON_A)),
             new Event(
                 "Event 2",
                 TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true),
@@ -379,15 +380,15 @@ public final class FindMeetingQueryTest {
             new Event(
                 "Event 3",
                 TimeRange.fromStartDuration(TIME_0830AM, 15),
-                Collections.singletonList(testPerson)));
+                Collections.singletonList(PERSON_N)));
 
     MeetingRequest request =
         new MeetingRequest(Collections.singletonList(PERSON_A), DURATION_30_MINUTES);
-    request.addOptionalAttendee(testPerson);
+    request.addOptionalAttendee(PERSON_N);
 
-    Collection<TimeRange> actual = query.query(events, request);
-    Collection<TimeRange> expected =
-        Arrays.asList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
+    Collection<com.google.sps.TimeRange> actual = query.query(events, request);
+    Collection<com.google.sps.TimeRange> expected =
+            Collections.singletonList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
     Assert.assertEquals(expected, actual);
   }
 
@@ -397,10 +398,10 @@ public final class FindMeetingQueryTest {
     // Two optional attendees with the no gaps in their schedules
     // Should return no times
     //
-    // Events  : |--A--||------A-------| 
+    // Events  : |---------A-----------|
     // Events  : |---------B-----------|
     // Day     : |---------------------|
-    // Options : 
+    // Options :
 
     Collection<Event> events =
         Arrays.asList(
@@ -417,9 +418,9 @@ public final class FindMeetingQueryTest {
     request.addOptionalAttendee(PERSON_A);
     request.addOptionalAttendee(PERSON_B);
 
-    Collection<TimeRange> actual = query.query(events, request);
+    Collection<com.google.sps.TimeRange> actual = query.query(events, request);
 
-    Collection<TimeRange> expected = Collections.emptyList();
+    Collection<com.google.sps.TimeRange> expected = Collections.emptyList();
     Assert.assertEquals(expected, actual);
   }
 
@@ -429,13 +430,13 @@ public final class FindMeetingQueryTest {
     // Two optional attendees with the following gaps in their schedules
     // Should return time slots that both attendees can attend
     //
-    // Events  :      |--A--| 
-    // Events  :            |-B-|  |-B-|
-    // Day     : |---------------------|
-    // Options : |----|     
-    // Options :                |--|
+    // Events  : |--A--|  |--A--|           |--A--| |-A-|
+    // Events  :   |-B-|  |-B-|     |---B---|
+    // Day     : |--------------------------------------|
+    // Options :       |--|
+    // Options :                |---|
+    // Options :                                  |-|
 
-      
     Collection<Event> events =
         Arrays.asList(
             new Event(
@@ -443,9 +444,17 @@ public final class FindMeetingQueryTest {
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0930AM, false),
                 Collections.singletonList(PERSON_A)),
             new Event(
+                "Event 1.5",
+                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(9, 0), 30),
+                Collections.singletonList(PERSON_B)),
+            new Event(
                 "Event 2",
                 TimeRange.fromStartDuration(TIME_1000AM, 30),
                 Collections.singletonList(PERSON_A)),
+            new Event(
+                "Event 5",
+                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(14, 0), 120),
+                Collections.singletonList(PERSON_B)),
             new Event(
                 "Event 3",
                 TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(16, 0), 30),
@@ -454,15 +463,7 @@ public final class FindMeetingQueryTest {
                 "Event 4",
                 TimeRange.fromStartEnd(
                     TimeRange.getTimeInMinutes(17, 0), TimeRange.END_OF_DAY, true),
-                Collections.singletonList(PERSON_A)),
-            new Event(
-                "Event 1.5",
-                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(9, 0), 30),
-                Collections.singletonList(PERSON_B)),
-            new Event(
-                "Event 5",
-                TimeRange.fromStartDuration(TimeRange.getTimeInMinutes(14, 0), 120),
-                Collections.singletonList(PERSON_B)));
+                Collections.singletonList(PERSON_A)));
 
     MeetingRequest request = new MeetingRequest(Collections.emptyList(), DURATION_30_MINUTES);
     request.addOptionalAttendee(PERSON_A);
@@ -477,7 +478,7 @@ public final class FindMeetingQueryTest {
             TimeRange.fromStartEnd(
                 TimeRange.getTimeInMinutes(10, 30), TimeRange.getTimeInMinutes(14, 0), false),
             TimeRange.fromStartEnd(
-                TimeRange.getTimeInMinutes(16, 30), TimeRange.getTimeInMinutes(17, 0), false));
+                TimeRange.getTimeInMinutes(16, 30), TimeRange.getTimeInMinutes(17, 0), true));
     Assert.assertEquals(expected, actual);
   }
 }
