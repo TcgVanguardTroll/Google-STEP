@@ -158,7 +158,7 @@ public final class FindMeetingQuery {
     return allAttendees;
   }
   public List<TimeRange> populateTimeRanges(
-      Collection<com.google.sps.Event> events, Collection<String> attendees, int desiredDuration) {
+      Collection<Event> events, Collection<String> attendees, int desiredDuration) {
     return findAvailableTimeRangesForAttendees(events, attendees, desiredDuration);
   }
 }
