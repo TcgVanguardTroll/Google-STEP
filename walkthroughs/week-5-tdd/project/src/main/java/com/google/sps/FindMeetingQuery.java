@@ -79,7 +79,7 @@ public final class FindMeetingQuery {
 
     allTimeRanges = findAvailableTimeRangesForAttendees(events, allAttendees, desiredDuration);
     if (allTimeRanges.isEmpty()) {
-      mandatoryTimeRanges = populateTimeRanges(events, mandatoryAttendees, desiredDuration);
+      List<TimeRange> mandatoryTimeRanges = populateTimeRanges(events, mandatoryAttendees, desiredDuration);
       return mandatoryTimeRanges;
     }
     return allTimeRanges;
