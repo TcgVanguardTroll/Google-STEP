@@ -14,6 +14,7 @@
 
 package com.google.sps;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +79,7 @@ public final class FindMeetingQueryTest {
   public void eventSplitsRestriction() {
     // The event should split the day into two options (before and after the event).
     Collection<Event> events =
-       Arrays.asList(
+       ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES),
@@ -89,7 +90,7 @@ public final class FindMeetingQueryTest {
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList(
+        ImmutableList.of(
             TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
             TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true));
 
@@ -106,7 +107,7 @@ public final class FindMeetingQueryTest {
     // Options : |--1--|     |--2--|     |--3--|
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
@@ -116,11 +117,11 @@ public final class FindMeetingQueryTest {
                 TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
                 Collections.singletonList(PERSON_B)));
 
-    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+    MeetingRequest request = new MeetingRequest(ImmutableList.of(PERSON_A, PERSON_B), DURATION_30_MINUTES);
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList(
+        ImmutableList.of(
             TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
             TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
             TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
@@ -138,7 +139,7 @@ public final class FindMeetingQueryTest {
     // Options : |--1--|         |--2--|
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartDuration(TIME_0830AM, DURATION_60_MINUTES),
@@ -148,11 +149,11 @@ public final class FindMeetingQueryTest {
                 TimeRange.fromStartDuration(TIME_0900AM, DURATION_60_MINUTES),
                 Collections.singletonList(PERSON_B)));
 
-    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+    MeetingRequest request = new MeetingRequest(ImmutableList.of(PERSON_A, PERSON_B), DURATION_30_MINUTES);
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList(
+        ImmutableList.of(
             TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
             TimeRange.fromStartEnd(TIME_1000AM, TimeRange.END_OF_DAY, true));
 
@@ -170,7 +171,7 @@ public final class FindMeetingQueryTest {
     // Options : |--1--|         |--2--|
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartDuration(TIME_0830AM, DURATION_90_MINUTES),
@@ -180,11 +181,11 @@ public final class FindMeetingQueryTest {
                 TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
                 Collections.singletonList(PERSON_B)));
 
-    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+    MeetingRequest request = new MeetingRequest(ImmutableList.of(PERSON_A, PERSON_B), DURATION_30_MINUTES);
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList(
+        ImmutableList.of(
             TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
             TimeRange.fromStartEnd(TIME_1000AM, TimeRange.END_OF_DAY, true));
 
@@ -201,7 +202,7 @@ public final class FindMeetingQueryTest {
     // Options : |--1--|         |--2--|
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartDuration(TIME_0830AM, DURATION_60_MINUTES),
@@ -216,7 +217,7 @@ public final class FindMeetingQueryTest {
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList(
+        ImmutableList.of(
             TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
             TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
 
@@ -233,11 +234,11 @@ public final class FindMeetingQueryTest {
     // Options :       |-----|
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
-                Arrays.asList(PERSON_A)),
+                ImmutableList.of(PERSON_A)),
             new Event(
                 "Event 2",
                 TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true),
@@ -248,7 +249,7 @@ public final class FindMeetingQueryTest {
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
+        ImmutableList.of(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
 
     Assert.assertEquals(expected, actual);
   }
@@ -258,7 +259,7 @@ public final class FindMeetingQueryTest {
     // Add an event, but make the only attendee someone different from the person looking to book
     // a meeting. This event should not affect the booking.
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
@@ -274,7 +275,7 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void noConflicts() {
-    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+    MeetingRequest request = new MeetingRequest(ImmutableList.of(PERSON_A, PERSON_B), DURATION_30_MINUTES);
 
     Collection<TimeRange> actual = query.query(NO_EVENTS, request);
     Collection<TimeRange> expected = Collections.singletonList(TimeRange.WHOLE_DAY);
@@ -292,7 +293,7 @@ public final class FindMeetingQueryTest {
     // Options :
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
@@ -327,7 +328,7 @@ public final class FindMeetingQueryTest {
     String PERSON_J = "Person Jordan";
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
@@ -338,12 +339,12 @@ public final class FindMeetingQueryTest {
                 Collections.singletonList(PERSON_B)),
             new Event("Event 3", TimeRange.WHOLE_DAY, Collections.singletonList(PERSON_J)));
 
-    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+    MeetingRequest request = new MeetingRequest(ImmutableList.of(PERSON_A, PERSON_B), DURATION_30_MINUTES);
     request.addOptionalAttendee(PERSON_J);
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList(
+        ImmutableList.of(
             TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
             TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
             TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
@@ -367,7 +368,7 @@ public final class FindMeetingQueryTest {
     String PERSON_N = "Person Nadroj";
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
@@ -403,7 +404,7 @@ public final class FindMeetingQueryTest {
     // Options :
 
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, false),
@@ -438,7 +439,7 @@ public final class FindMeetingQueryTest {
 
       
     Collection<Event> events =
-        Arrays.asList(
+        ImmutableList.of(
             new Event(
                 "Event 1",
                 TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0930AM, false),
@@ -472,7 +473,7 @@ public final class FindMeetingQueryTest {
     Collection<TimeRange> actual = query.query(events, request);
 
     Collection<TimeRange> expected =
-        Arrays.asList(
+        ImmutableList.of(
             TimeRange.fromStartEnd(
                 TimeRange.getTimeInMinutes(9, 30), TimeRange.getTimeInMinutes(10, 0), false),
             TimeRange.fromStartEnd(
