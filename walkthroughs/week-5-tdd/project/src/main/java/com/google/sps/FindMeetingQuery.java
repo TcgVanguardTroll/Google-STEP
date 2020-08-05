@@ -30,24 +30,54 @@ public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
-    // Array of queries representing times to meet.
-    List<TimeRange> query = new ArrayList<>();
-
     int desiredDuration = (int) request.getDuration();
-
-    // Collection of string representing who is to attend the requested meeting.
-    Collection<String> requestAttendees = request.getAttendees();
 
     // Check if duration of event is longer than a whole day and if so return empty.
     if ((int) request.getDuration() > WHOLE_DAY.duration()) {
-      return query;
+      return Collections.emptyList();
     }
 
-    // Check if there are any events happening at all if so return whole day query.
-    if (events.size() == 0) {
-      query.add(TimeRange.WHOLE_DAY);
-      return query;
+    // Collection of string representing who is to attend the requested meeting.
+    Collection<String> mandatoryAttendees = new ArrayList<>(request.getAttendees());
+
+    // Collection of strings representing who are optional to the meeting.
+    Collection<String> optionalAttendees = new ArrayList<>(request.getOptionalAttendees());
+
+    // If there are no mandatory attendees , return lists of the optional attendees time ranges.
+    if (mandatoryAttendees.isEmpty()) {
+      List<TimeRange> optionalTimeRanges =
+          populateTimeRanges(events, optionalAttendees, desiredDuration);
+      return optionalTimeRanges;
     }
+
+    // If there are no optional attendees , return lists of the mandatory attendees time ranges.
+    if (optionalAttendees.isEmpty()) {
+      List<TimeRange> mandatoryTimeRanges =
+          populateTimeRanges(events, mandatoryAttendees, desiredDuration);
+      return mandatoryTimeRanges;
+    }
+
+    // Collection of Strings representing all attendees ( Mandatory and Optional )
+    Collection<String> allAttendees =
+        combineMandatoryAndOptional(mandatoryAttendees, optionalAttendees);
+
+    // List of queries representing times to meet.
+
+    List<TimeRange> allTimeRanges =
+        findAvailableTimeRangesForAttendees(events, allAttendees, desiredDuration);
+    if (allTimeRanges.isEmpty()) {
+      List<TimeRange> mandatoryTimeRanges =
+          populateTimeRanges(events, mandatoryAttendees, desiredDuration);
+      return mandatoryTimeRanges;
+    }
+    return allTimeRanges;
+  }
+
+  public List<TimeRange> findAvailableTimeRangesForAttendees(
+      Collection<Event> events, Collection<String> attendees, int desiredDuration) {
+
+    // Array of queries representing times to meet.
+    List<TimeRange> timeRanges = new ArrayList<>();
 
     // Copy of events used for iterating and sorting.
     List<Event> eventsCopy = new ArrayList<>(events);
@@ -55,17 +85,23 @@ public final class FindMeetingQuery {
     // Sorts the even in chronological order.
     eventsCopy.sort((e1, e2) -> ORDER_BY_START.compare(e1.getWhen(), e2.getWhen()));
 
+    // Check if there are any events happening at all if so return whole day query.
+    if (events.isEmpty()) {
+      timeRanges.add(TimeRange.WHOLE_DAY);
+      return timeRanges;
+    }
+
     int nextTime = START_OF_DAY;
 
     // Iterating through input event collection.
     for (Event event : eventsCopy) {
       int currentTime = nextTime;
 
-      // Collection of the people who are required to attend meeting.
+      // Collection of the people who can attend meeting.
       Set<String> eventAttendees = event.getAttendees();
 
-      // If the none of the attenddess are required attendees skip this event
-      if (Collections.disjoint(eventAttendees, requestAttendees)) {
+      // If the none of the attendees are capable of attending skip this event
+      if (Collections.disjoint(eventAttendees, attendees)) {
         continue;
       }
 
@@ -77,7 +113,7 @@ public final class FindMeetingQuery {
       // If this is a valid time range then add it to query .
       if (currentTime <= eventStart) {
         if (eventStart - currentTime >= desiredDuration) {
-          query.add(TimeRange.fromStartEnd(currentTime, eventStart, /* inclusive= */ false));
+          timeRanges.add(TimeRange.fromStartEnd(currentTime, eventStart, /* inclusive= */ false));
         }
         nextTime = eventEnd;
       }
@@ -89,8 +125,22 @@ public final class FindMeetingQuery {
     }
     // If at the last event and there is still time in the day.
     if (nextTime < END_OF_DAY) {
-      query.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
+      timeRanges.add(TimeRange.fromStartEnd(nextTime, END_OF_DAY, /* inclusive= */ true));
     }
-    return query;
+    return timeRanges;
+  }
+
+  public Collection<String> combineMandatoryAndOptional(
+      Collection<String> mandatoryAttendees, Collection<String> optionalAttendees) {
+    // Collection of Strings representing all attendees ( Mandatory and Optional )
+    Collection<String> allAttendees = new ArrayList<>();
+    allAttendees.addAll(optionalAttendees);
+    allAttendees.addAll(mandatoryAttendees);
+    return allAttendees;
+  }
+
+  public List<TimeRange> populateTimeRanges(
+      Collection<Event> events, Collection<String> attendees, int desiredDuration) {
+    return findAvailableTimeRangesForAttendees(events, attendees, desiredDuration);
   }
 }
