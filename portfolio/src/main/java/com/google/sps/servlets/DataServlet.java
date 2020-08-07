@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 /**
  * Servlet that returns some example content.
  */
@@ -59,11 +61,11 @@ public class DataServlet extends HttpServlet {
         if (numOfComments != -1) {
             List<Entity> listResults = results.asList(FetchOptions.Builder.withLimit(numOfComments));
             for (Entity entity : listResults) {
-                    String name = (String) entity.getProperty("name");
-                    String pageComment = (String) entity.getProperty("comment");
-                    Comment comment = new Comment(name, pageComment);
-                    comments.add(comment);
-                }
+                String name = (String) entity.getProperty("name");
+                String pageComment = (String) entity.getProperty("comment");
+                Comment comment = new Comment(name, pageComment);
+                comments.add(comment);
+            }
         }
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(comments));
